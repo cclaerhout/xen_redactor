@@ -1,4 +1,22 @@
 if (typeof RedactorPlugins === 'undefined') var RedactorPlugins = {};
+
+RedactorPlugins.xenforo = {
+	init:function(obj, event, key)
+	{
+	      	switch (key) {
+      		case 'xen_undo': 
+      			obj.execCommand('undo', false);
+      			break;
+      		case 'xen_redo': 
+      			obj.execCommand('redo', false);
+      			break;
+      		case 'xen_removeformat':
+      			obj.inactiveAllButtons(); 
+      			obj.execCommand('removeformat', false);
+      			break;
+	      	}
+	}
+},
      
 RedactorPlugins.xenforo_swith = {
      
@@ -191,5 +209,5 @@ RedactorPlugins.fullscreen = {
 		this.$editor.height(height-(pad*2));
 		this.$el.height(height);
 		this.$content.height(height-toolbar);
-	},
+	}
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="sedo_redactor" title="Redactor" version_string="0.01" version_id="0" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="sedo_redactor" title="Redactor" version_string="0.02" version_id="0" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -15,76 +15,79 @@
     <interface_groups/>
   </permissions>
   <phrases>
-    <phrase title="sedo_redactor_add_column_left" version_id="0" version_string="0.01"><![CDATA[Add column left]]></phrase>
-    <phrase title="sedo_redactor_add_column_right" version_id="0" version_string="0.01"><![CDATA[Add column right]]></phrase>
-    <phrase title="sedo_redactor_add_head" version_id="0" version_string="0.01"><![CDATA[Add head]]></phrase>
-    <phrase title="sedo_redactor_add_row_above" version_id="0" version_string="0.01"><![CDATA[Add row above]]></phrase>
-    <phrase title="sedo_redactor_add_row_below" version_id="0" version_string="0.01"><![CDATA[Add row below]]></phrase>
-    <phrase title="sedo_redactor_alignment" version_id="0" version_string="0.01"><![CDATA[Alignment]]></phrase>
-    <phrase title="sedo_redactor_align_center" version_id="0" version_string="0.01"><![CDATA[Center text]]></phrase>
-    <phrase title="sedo_redactor_align_justify" version_id="0" version_string="0.01"><![CDATA[Justify text]]></phrase>
-    <phrase title="sedo_redactor_align_left" version_id="0" version_string="0.01"><![CDATA[Align text to the left]]></phrase>
-    <phrase title="sedo_redactor_align_right" version_id="0" version_string="0.01"><![CDATA[Align text to the right]]></phrase>
-    <phrase title="sedo_redactor_anchor" version_id="0" version_string="0.01"><![CDATA[Anchor]]></phrase>
-    <phrase title="sedo_redactor_back_color" version_id="0" version_string="0.01"><![CDATA[Background color]]></phrase>
-    <phrase title="sedo_redactor_bold" version_id="0" version_string="0.01"><![CDATA[Bold]]></phrase>
-    <phrase title="sedo_redactor_cancel" version_id="0" version_string="0.01"><![CDATA[Cancel]]></phrase>
-    <phrase title="sedo_redactor_choose" version_id="0" version_string="0.01"><![CDATA[Choose]]></phrase>
-    <phrase title="sedo_redactor_code" version_id="0" version_string="0.01"><![CDATA[Code]]></phrase>
-    <phrase title="sedo_redactor_columns" version_id="0" version_string="0.01"><![CDATA[Columns]]></phrase>
-    <phrase title="sedo_redactor_delete" version_id="0" version_string="0.01"><![CDATA[Delete]]></phrase>
-    <phrase title="sedo_redactor_deleted" version_id="0" version_string="0.01"><![CDATA[Deleted]]></phrase>
-    <phrase title="sedo_redactor_delete_column" version_id="0" version_string="0.01"><![CDATA[Delete column]]></phrase>
-    <phrase title="sedo_redactor_delete_head" version_id="0" version_string="0.01"><![CDATA[Delete head]]></phrase>
-    <phrase title="sedo_redactor_delete_row" version_id="0" version_string="0.01"><![CDATA[Delete row]]></phrase>
-    <phrase title="sedo_redactor_delete_table" version_id="0" version_string="0.01"><![CDATA[Delete table]]></phrase>
-    <phrase title="sedo_redactor_download" version_id="0" version_string="0.01"><![CDATA[Download]]></phrase>
-    <phrase title="sedo_redactor_drop_file_here" version_id="0" version_string="0.01"><![CDATA[Drop file here]]></phrase>
-    <phrase title="sedo_redactor_email" version_id="0" version_string="0.01"><![CDATA[Email]]></phrase>
-    <phrase title="sedo_redactor_font_color" version_id="0" version_string="0.01"><![CDATA[Font color]]></phrase>
-    <phrase title="sedo_redactor_formatting" version_id="0" version_string="0.01"><![CDATA[Formatting]]></phrase>
-    <phrase title="sedo_redactor_header_1" version_id="0" version_string="0.01"><![CDATA[Header_1]]></phrase>
-    <phrase title="sedo_redactor_header_2" version_id="0" version_string="0.01"><![CDATA[Header 2]]></phrase>
-    <phrase title="sedo_redactor_header_3" version_id="0" version_string="0.01"><![CDATA[Header 3]]></phrase>
-    <phrase title="sedo_redactor_header_4" version_id="0" version_string="0.01"><![CDATA[Header 4]]></phrase>
-    <phrase title="sedo_redactor_html" version_id="0" version_string="0.01"><![CDATA[HTML]]></phrase>
-    <phrase title="sedo_redactor_image_web_link" version_id="0" version_string="0.01"><![CDATA[Image Web Link]]></phrase>
-    <phrase title="sedo_redactor_indent" version_id="0" version_string="0.01"><![CDATA[Indent]]></phrase>
-    <phrase title="sedo_redactor_insert" version_id="0" version_string="0.01"><![CDATA[Insert]]></phrase>
-    <phrase title="sedo_redactor_insert_file" version_id="0" version_string="0.01"><![CDATA[Insert file]]></phrase>
-    <phrase title="sedo_redactor_insert_hr" version_id="0" version_string="0.01"><![CDATA[Insert Horizontal Rule]]></phrase>
-    <phrase title="sedo_redactor_insert_image" version_id="0" version_string="0.01"><![CDATA[Insert image]]></phrase>
-    <phrase title="sedo_redactor_insert_link" version_id="0" version_string="0.01"><![CDATA[Insert link]]></phrase>
-    <phrase title="sedo_redactor_insert_table" version_id="0" version_string="0.01"><![CDATA[Insert_table]]></phrase>
-    <phrase title="sedo_redactor_insert_video" version_id="0" version_string="0.01"><![CDATA[Insert video]]></phrase>
-    <phrase title="sedo_redactor_italic" version_id="0" version_string="0.01"><![CDATA[Italic]]></phrase>
-    <phrase title="sedo_redactor_left" version_id="0" version_string="0.01"><![CDATA[Left]]></phrase>
-    <phrase title="sedo_redactor_link" version_id="0" version_string="0.01"><![CDATA[Link]]></phrase>
-    <phrase title="sedo_redactor_none" version_id="0" version_string="0.01"><![CDATA[None]]></phrase>
-    <phrase title="sedo_redactor_open_link_in_newtab" version_id="0" version_string="0.01"><![CDATA[Open link in newtab]]></phrase>
-    <phrase title="sedo_redactor_ordered_list" version_id="0" version_string="0.01"><![CDATA[Ordered list]]></phrase>
-    <phrase title="sedo_redactor_or_choose" version_id="0" version_string="0.01"><![CDATA[Or choose]]></phrase>
-    <phrase title="sedo_redactor_outdent" version_id="0" version_string="0.01"><![CDATA[Outdent]]></phrase>
-    <phrase title="sedo_redactor_paragraph" version_id="0" version_string="0.01"><![CDATA[Paragraph]]></phrase>
-    <phrase title="sedo_redactor_position" version_id="0" version_string="0.01"><![CDATA[Position]]></phrase>
-    <phrase title="sedo_redactor_quote" version_id="0" version_string="0.01"><![CDATA[Quote]]></phrase>
-    <phrase title="sedo_redactor_right" version_id="0" version_string="0.01"><![CDATA[Right]]></phrase>
-    <phrase title="sedo_redactor_rows" version_id="0" version_string="0.01"><![CDATA[Rows]]></phrase>
-    <phrase title="sedo_redactor_save" version_id="0" version_string="0.01"><![CDATA[Save]]></phrase>
-    <phrase title="sedo_redactor_table" version_id="0" version_string="0.01"><![CDATA[Table]]></phrase>
-    <phrase title="sedo_redactor_text" version_id="0" version_string="0.01"><![CDATA[Text]]></phrase>
-    <phrase title="sedo_redactor_title" version_id="0" version_string="0.01"><![CDATA[Title]]></phrase>
-    <phrase title="sedo_redactor_underline" version_id="0" version_string="0.01"><![CDATA[Underline]]></phrase>
-    <phrase title="sedo_redactor_unlink" version_id="0" version_string="0.01"><![CDATA[Unlink]]></phrase>
-    <phrase title="sedo_redactor_unordered_list" version_id="0" version_string="0.01"><![CDATA[Unordered list]]></phrase>
-    <phrase title="sedo_redactor_upload" version_id="0" version_string="0.01"><![CDATA[Upload]]></phrase>
-    <phrase title="sedo_redactor_url" version_id="0" version_string="0.01"><![CDATA[Url]]></phrase>
-    <phrase title="sedo_redactor_video_embed_code" version_id="0" version_string="0.01"><![CDATA[Video embed code]]></phrase>
+    <phrase title="sedo_redactor_add_column_left" version_id="0" version_string="1.0"><![CDATA[Add column left]]></phrase>
+    <phrase title="sedo_redactor_add_column_right" version_id="0" version_string="1.0"><![CDATA[Add column right]]></phrase>
+    <phrase title="sedo_redactor_add_head" version_id="0" version_string="1.0"><![CDATA[Add head]]></phrase>
+    <phrase title="sedo_redactor_add_row_above" version_id="0" version_string="1.0"><![CDATA[Add row above]]></phrase>
+    <phrase title="sedo_redactor_add_row_below" version_id="0" version_string="1.0"><![CDATA[Add row below]]></phrase>
+    <phrase title="sedo_redactor_alignment" version_id="0" version_string="1.0"><![CDATA[Alignment]]></phrase>
+    <phrase title="sedo_redactor_align_center" version_id="0" version_string="1.0"><![CDATA[Center text]]></phrase>
+    <phrase title="sedo_redactor_align_justify" version_id="0" version_string="1.0"><![CDATA[Justify text]]></phrase>
+    <phrase title="sedo_redactor_align_left" version_id="0" version_string="1.0"><![CDATA[Align text to the left]]></phrase>
+    <phrase title="sedo_redactor_align_right" version_id="0" version_string="1.0"><![CDATA[Align text to the right]]></phrase>
+    <phrase title="sedo_redactor_anchor" version_id="0" version_string="1.0"><![CDATA[Anchor]]></phrase>
+    <phrase title="sedo_redactor_back_color" version_id="0" version_string="1.0"><![CDATA[Background color]]></phrase>
+    <phrase title="sedo_redactor_bold" version_id="0" version_string="1.0"><![CDATA[Bold]]></phrase>
+    <phrase title="sedo_redactor_cancel" version_id="0" version_string="1.0"><![CDATA[Cancel]]></phrase>
+    <phrase title="sedo_redactor_choose" version_id="0" version_string="1.0"><![CDATA[Choose]]></phrase>
+    <phrase title="sedo_redactor_code" version_id="0" version_string="1.0"><![CDATA[Code]]></phrase>
+    <phrase title="sedo_redactor_columns" version_id="0" version_string="1.0"><![CDATA[Columns]]></phrase>
+    <phrase title="sedo_redactor_delete" version_id="0" version_string="1.0"><![CDATA[Delete]]></phrase>
+    <phrase title="sedo_redactor_deleted" version_id="0" version_string="1.0"><![CDATA[Deleted]]></phrase>
+    <phrase title="sedo_redactor_delete_column" version_id="0" version_string="1.0"><![CDATA[Delete column]]></phrase>
+    <phrase title="sedo_redactor_delete_head" version_id="0" version_string="1.0"><![CDATA[Delete head]]></phrase>
+    <phrase title="sedo_redactor_delete_row" version_id="0" version_string="1.0"><![CDATA[Delete row]]></phrase>
+    <phrase title="sedo_redactor_delete_table" version_id="0" version_string="1.0"><![CDATA[Delete table]]></phrase>
+    <phrase title="sedo_redactor_download" version_id="0" version_string="1.0"><![CDATA[Download]]></phrase>
+    <phrase title="sedo_redactor_drop_file_here" version_id="0" version_string="1.0"><![CDATA[Drop file here]]></phrase>
+    <phrase title="sedo_redactor_email" version_id="0" version_string="1.0"><![CDATA[Email]]></phrase>
+    <phrase title="sedo_redactor_font_color" version_id="0" version_string="1.0"><![CDATA[Font color]]></phrase>
+    <phrase title="sedo_redactor_formatting" version_id="0" version_string="1.0"><![CDATA[Formatting]]></phrase>
+    <phrase title="sedo_redactor_header_1" version_id="0" version_string="1.0"><![CDATA[Header_1]]></phrase>
+    <phrase title="sedo_redactor_header_2" version_id="0" version_string="1.0"><![CDATA[Header 2]]></phrase>
+    <phrase title="sedo_redactor_header_3" version_id="0" version_string="1.0"><![CDATA[Header 3]]></phrase>
+    <phrase title="sedo_redactor_header_4" version_id="0" version_string="1.0"><![CDATA[Header 4]]></phrase>
+    <phrase title="sedo_redactor_html" version_id="0" version_string="1.0"><![CDATA[HTML]]></phrase>
+    <phrase title="sedo_redactor_image_web_link" version_id="0" version_string="1.0"><![CDATA[Image Web Link]]></phrase>
+    <phrase title="sedo_redactor_indent" version_id="0" version_string="1.0"><![CDATA[Indent]]></phrase>
+    <phrase title="sedo_redactor_insert" version_id="0" version_string="1.0"><![CDATA[Insert]]></phrase>
+    <phrase title="sedo_redactor_insert_file" version_id="0" version_string="1.0"><![CDATA[Insert file]]></phrase>
+    <phrase title="sedo_redactor_insert_hr" version_id="0" version_string="1.0"><![CDATA[Insert Horizontal Rule]]></phrase>
+    <phrase title="sedo_redactor_insert_image" version_id="0" version_string="1.0"><![CDATA[Insert image]]></phrase>
+    <phrase title="sedo_redactor_insert_link" version_id="0" version_string="1.0"><![CDATA[Insert link]]></phrase>
+    <phrase title="sedo_redactor_insert_table" version_id="0" version_string="1.0"><![CDATA[Insert_table]]></phrase>
+    <phrase title="sedo_redactor_insert_video" version_id="0" version_string="1.0"><![CDATA[Insert video]]></phrase>
+    <phrase title="sedo_redactor_italic" version_id="0" version_string="1.0"><![CDATA[Italic]]></phrase>
+    <phrase title="sedo_redactor_left" version_id="0" version_string="1.0"><![CDATA[Left]]></phrase>
+    <phrase title="sedo_redactor_link" version_id="0" version_string="1.0"><![CDATA[Link]]></phrase>
+    <phrase title="sedo_redactor_none" version_id="0" version_string="1.0"><![CDATA[None]]></phrase>
+    <phrase title="sedo_redactor_open_link_in_newtab" version_id="0" version_string="1.0"><![CDATA[Open link in newtab]]></phrase>
+    <phrase title="sedo_redactor_ordered_list" version_id="0" version_string="1.0"><![CDATA[Ordered list]]></phrase>
+    <phrase title="sedo_redactor_or_choose" version_id="0" version_string="1.0"><![CDATA[Or choose]]></phrase>
+    <phrase title="sedo_redactor_outdent" version_id="0" version_string="1.0"><![CDATA[Outdent]]></phrase>
+    <phrase title="sedo_redactor_paragraph" version_id="0" version_string="1.0"><![CDATA[Paragraph]]></phrase>
+    <phrase title="sedo_redactor_position" version_id="0" version_string="1.0"><![CDATA[Position]]></phrase>
+    <phrase title="sedo_redactor_quote" version_id="0" version_string="1.0"><![CDATA[Quote]]></phrase>
+    <phrase title="sedo_redactor_redo" version_id="0" version_string="1.0"><![CDATA[Redo (Ctrl+Shift+Z)]]></phrase>
+    <phrase title="sedo_redactor_remove_formatting" version_id="0" version_string="1.0"><![CDATA[Remove formatting (Ctrl+M)]]></phrase>
+    <phrase title="sedo_redactor_right" version_id="0" version_string="1.0"><![CDATA[Right]]></phrase>
+    <phrase title="sedo_redactor_rows" version_id="0" version_string="1.0"><![CDATA[Rows]]></phrase>
+    <phrase title="sedo_redactor_save" version_id="0" version_string="1.0"><![CDATA[Save]]></phrase>
+    <phrase title="sedo_redactor_table" version_id="0" version_string="1.0"><![CDATA[Table]]></phrase>
+    <phrase title="sedo_redactor_text" version_id="0" version_string="1.0"><![CDATA[Text]]></phrase>
+    <phrase title="sedo_redactor_title" version_id="0" version_string="1.0"><![CDATA[Title]]></phrase>
+    <phrase title="sedo_redactor_underline" version_id="0" version_string="1.0"><![CDATA[Underline]]></phrase>
+    <phrase title="sedo_redactor_undo" version_id="0" version_string="1.0"><![CDATA[Undo (Ctrl+Z)]]></phrase>
+    <phrase title="sedo_redactor_unlink" version_id="0" version_string="1.0"><![CDATA[Unlink]]></phrase>
+    <phrase title="sedo_redactor_unordered_list" version_id="0" version_string="1.0"><![CDATA[Unordered list]]></phrase>
+    <phrase title="sedo_redactor_upload" version_id="0" version_string="1.0"><![CDATA[Upload]]></phrase>
+    <phrase title="sedo_redactor_url" version_id="0" version_string="1.0"><![CDATA[Url]]></phrase>
+    <phrase title="sedo_redactor_video_embed_code" version_id="0" version_string="1.0"><![CDATA[Video embed code]]></phrase>
   </phrases>
   <route_prefixes/>
   <style_properties/>
   <templates>
-    <template title="redactor.css" version_id="0" version_string="0.01"><![CDATA[.redactor_box {
+    <template title="redactor.css" version_id="0" version_string="1.0"><![CDATA[.redactor_box {
 	position: relative;
 	border: 1px solid #ddd;
 	overflow: visible;
@@ -786,7 +789,7 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 .redactor_toolbar_fullscreen {
     overflow: hidden !important;
 }]]></template>
-    <template title="redactor_js_lang" version_id="0" version_string="0.01"><![CDATA[var RELANG = {};
+    <template title="redactor_js_lang" version_id="0" version_string="1.0"><![CDATA[var RELANG = {};
 
 var RLANG = {
 	html: "{xen:jsescape {xen:phrase sedo_redactor_html}}",
@@ -857,12 +860,12 @@ var RLANG = {
 
 	<xen:comment>XenForo plugins</xen:comment>
 };]]></template>
-    <template title="redactor_js_params" version_id="0" version_string="0.01"><![CDATA[xenforo: {
+    <template title="redactor_js_params" version_id="0" version_string="1.0"><![CDATA[xenforo: {
 	document_base_url: "{xen:jsescape $requestPaths.fullBasePath}",	
 	smilies: {xen:helper json, $smilies},
 	bbcode_switch_text: ["{xen:jsescape {xen:phrase use_bb_code_editor}}", "{xen:jsescape {xen:phrase use_rich_text_editor}}"]
 }]]></template>
-    <template title="redactor_js_setup" version_id="0" version_string="0.01"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
+    <template title="redactor_js_setup" version_id="0" version_string="1.0"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
 <xen:require js="js/sedo/redactor/plugins/xenforo/xenforo.js" />
 <xen:require css="redactor.css" />
 <xen:require css="redactor_xenforo.css" />
@@ -878,23 +881,44 @@ var RLANG = {
 	<xen:hook name="redactor_js_lang">
 		<xen:include template="redactor_js_lang" />
 	</xen:hook>
+
+	<xen:hook name="redactor_js_plugins" params="{xen:array 'editorId={$editorId}'}">
+		<xen:set var="$plugins">
+			'fullscreen', 'xenforo_swith', 'xenforo_removeformat', 'xenforo_undo',  'xenforo_redo'
+		</xen:set>
+	</xen:hook>
 	
-	<xen:set var="$buttons">
-		<xen:hook name="redactor_js_buttons" params="{xen:array 'editorId={$editorId}'}">
-			'formatting', '|', 'bold', 'italic', 'deleted', '|','unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
+	<xen:hook name="redactor_js_buttons" params="{xen:array 'editorId={$editorId}'}">
+		<xen:set var="$buttons">
+			'formatting', 'xen_removeformat', '|', 'bold', 'italic', 'underline', 'deleted', '|', 'xen_undo', 'xen_redo', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
 			'image', 'video', '#', 'file', 'table', 'link', '|','fontcolor', 'backcolor', '|', '#', 'alignment', '|', 'horizontalrule'
-		</xen:hook>
-	</xen:set>
-		
+		</xen:set>
+	</xen:hook>
+
 	$(function()
 	{
 		$editor.css('visibility', '').show();
 
-		<xen:hook name="redactor_js_extra_functions">
-			function testButton(obj, event, key)
+		<xen:hook name="redactor_js_custom_functions">
+			function xenforo_init(obj, event, key)
 			{
-				alert(key);
+				RedactorPlugins.xenforo.init(obj, event, key);
 			}
+
+      			<xen:if is="{$customButtons}">
+      				<xen:foreach loop="$customButtons" value="$customButton" i="$i">
+					<xen:if is="!in_array({$customButton.tag}, array('|','#'))">
+						function cust_{$customButton.tag}(obj, event, key)
+						{
+							var code = "[{$customButton.tag}{xen:if '{$customButton.option}', '={xen:jsescape {$customButton.option}}'}]";
+							code += "{xen:if '{$customButton.content}', '{xen:jsescape {$customButton.content}}'}");
+							code += "[/{$customButton.tag}]";
+							obj.insertHtml(code);
+						}
+					</xen:if>
+      				</xen:foreach>
+      			</xen:if>
+
 		</xen:hook>
 
       		$editor.redactor(
@@ -904,17 +928,23 @@ var RLANG = {
 			convertDivs: true,
 			direction: '{$visitorLanguage.text_direction}',
       			//emptyHtml: '<span><br /></span>',
-      			plugins: ['fullscreen', 'xenforo_swith'],
+      			plugins: [{$plugins}],
       			buttons: [{$buttons}],
 			params: {<xen:include template="redactor_js_params" />},
 			buttonsCustom:
       			{
-				<xen:hook name="redactor_js_extra_buttons">
-	      				button1: 
-	      				{
-	      					title: 'Button',
-	      					callback: testButton 
-	      				}
+				<xen:hook name="redactor_js_custom_buttons">
+					xen_removeformat: { title: "{xen:jsescape {xen:phrase sedo_redactor_remove_formatting}}", callback: xenforo_init },
+					xen_undo: { title: "{xen:jsescape {xen:phrase sedo_redactor_undo}}", callback: xenforo_init },
+					xen_redo: { title: "{xen:jsescape {xen:phrase sedo_redactor_redo}}", callback: xenforo_init }
+
+					<xen:if is="{$customButtons}">
+						<xen:foreach loop="$customButtons" value="$customButton" i="$i" count="$total">
+							<xen:if is="!in_array({$customButton.tag}, array('|','#'))">
+								cust_{$customButton.tag}: { title: "{xen:jsescape $customButton.name}", callback: cust_{$customButton.tag} }{xen:if '{$i} != {$total}' , ','}
+							</xen:if>
+						</xen:foreach>
+					</xen:if>
 				</xen:hook>
       			}
       		});
@@ -926,24 +956,54 @@ var RLANG = {
 
 </script>
 </xen:hook>]]></template>
-    <template title="redactor_xenforo.css" version_id="0" version_string="0.01"><![CDATA[body .redactor_toolbar li a.redactor_btn_xen_switch{
+    <template title="redactor_xenforo.css" version_id="0" version_string="1.0"><![CDATA[body .redactor_toolbar li a.redactor_btn_xen_switch{
 	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
 	background-position: 0;
 	position: absolute;
 	right: 28px;
 }
 
+body .redactor_toolbar li a.redactor_btn_xen_undo{
+	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
+	background-position: -23px 0;
+}
+
+body .redactor_toolbar li a.redactor_btn_xen_redo{
+	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
+	background-position: -46px 0;
+}
+
+body .redactor_toolbar li a.redactor_btn_xen_removeformat{
+	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
+	background-position: -69px 0;
+}
+
+<xen:comment>Need to test below css</xen:comment>
 @media all and (-webkit-min-device-pixel-ratio: 1.5) {
 
 	body .redactor_toolbar li a.redactor_btn_xen_switch {
 		background-image: url(styles/sedo/redactor/xenforo_redactor_hd.png) no-repeat 0 0;
 		background-size: auto 25px;
 	}
+	body .redactor_toolbar li a.redactor_btn_xen_removeformat{
+		background-image:url(styles/sedo/redactor/xenforo_redactor_hd.png);
+		background-size: auto 25px;
+	}
+	
+	body .redactor_toolbar li a.redactor_btn_xen_redo{
+		background-image:url(styles/sedo/redactor/xenforo_redactor_hd.png);
+		background-size: auto 25px;
+	}
+	
+	body .redactor_toolbar li a.redactor_btn_xen_undo{
+		background-image:url(styles/sedo/redactor/xenforo_redactor_hd.png);
+		background-size: auto 25px;
+	}
 }]]></template>
   </templates>
   <bb_code_media_sites/>
   <template_modifications>
-    <modification title="redactor_js_setup" template_title="editor" execute_order="10" modification_type="str_replace" callback_class="" callback_method="" description="Redactor JS Setup" version_id="0" version_string="0.01" active="1">
+    <modification title="redactor_js_setup" template_title="editor" execute_order="10" modification_type="str_replace" callback_class="" callback_method="" description="Redactor JS Setup" version_id="0" version_string="1.0" active="1">
       <search_value><![CDATA[<xen:include template="editor_js_setup" />]]></search_value>
       <replace_value><![CDATA[<xen:include template="redactor_js_setup" />]]></replace_value>
     </modification>
