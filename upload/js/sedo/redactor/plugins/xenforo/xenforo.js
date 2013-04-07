@@ -14,8 +14,146 @@ RedactorPlugins.xenforo = {
       			obj.inactiveAllButtons(); 
       			obj.execCommand('removeformat', false);
       			break;
+      		case 'xen_media':
+      			RedactorPlugins.media.init(obj); 
+      			break;
 	      	}
-	}
+	},
+	loadOverlay:function(title, dialog, width, redactor, src, callback)
+	{
+		var t = RedactorPlugins.xenforo,
+		selectedHtmlParent = $(redactor.getParentNode()).html(),
+		selectedHtml = redactor.getSelectedHtml;
+		
+		if (typeof(callback) !== 'string' ||  typeof(src[callback]) !== 'function')
+		{
+			callback = false;
+		}
+
+		redactor.saveSelection();
+		redactor.setBuffer();
+
+		XenForo.myRedactor = {
+			title: title,
+			template: false,
+			width: width,
+			redactor: redactor,
+			src: src,
+			callback: callback,
+			selectedHtmlParent: selectedHtml,
+			selectedHtml: selectedHtml
+		};
+
+		XenForo.ajax('index.php?editor/redactor-dialog', { dialog: dialog, selectedHtmlParent: selectedHtmlParent, selectedHtml: selectedHtml}, t._overlayLoader);
+	},
+	_overlayLoader:function(ajaxData)
+	{
+		if (XenForo.hasResponseError(ajaxData) || typeof(ajaxData.templateHtml) == 'undefined')
+		{
+			return;
+		}
+	
+		if (ajaxData.templateHtml) 
+		{
+			var config = XenForo.myRedactor;
+
+ 			new XenForo.ExtLoader(ajaxData, function()
+  			{
+				var title = $(ajaxData.templateHtml).find('.rteTitle').html(),
+				callback = 
+					$.proxy(function(){
+						
+						if(typeof(title) === 'string')
+						{
+							$('#redactor_modal_header').html(title);							
+						}
+						
+						$('#redactor_modal').find('.rteFocus').focus();
+						
+						if(config.callback !== false){
+							config.src[config.callback](config.redactor);
+						}
+					}, config.src);
+
+				config.redactor.modalInit(config.title, ajaxData.templateHtml, config.width, callback);
+				return false;
+			});
+		}
+	},
+      	/* Use to get data from RTE and send them inside a textarea or input - available options: space */
+      	unescapeHtml : function(string, options) 
+      	{
+      		string = string
+      			.replace(/&amp;/g, "&")
+      			.replace(/&lt;/g, "<")
+      			.replace(/&gt;/g, ">")
+      			.replace(/&quot;/g, '"')
+      			.replace(/&#039;/g, "'");
+      			
+      		if(options == 'space')
+      		{
+      			string = string
+      				.replace(/	/g, '\t')
+      				.replace(/&nbsp;/g, '  ')
+      				.replace(/<\/p>\n<p>/g, '\n');
+      		}
+      
+      		var regex_p = new RegExp("^<p>([\\s\\S]+)</p>$", "i");
+      		if(regex_p.test(string))
+      		{
+      			string = string.match(regex_p);
+      			string = string[1];
+      		}
+      			
+      		return string;
+      	},
+      	/* Use to get data from textarea/inputs and send inside RTE - available options: space or onlyspace */
+      	escapeHtml: function(string, options) 
+      	{
+      		//No need anymore with editor/to-html ?
+      		if( options != 'onlyspace' )
+      		{
+      			string = string
+      				.replace(/&/g, "&amp;")
+      				.replace(/</g, "&lt;")
+      				.replace(/>/g, "&gt;")
+      				.replace(/"/g, "&quot;")
+      				.replace(/'/g, "&#039;");
+      		}
+      		
+      		//Must be executed in second
+      		if(options == 'space' || options == 'onlyspace')
+      		{
+      			string = string
+      				.replace(/\t/g, '	')
+      				.replace(/ /g, '&nbsp;')
+      				.replace(/\n/g, '</p>\n<p>');
+      		}
+      
+      		return string;
+      	},
+      	zen2han: function(str)
+      	{
+      		// ==========================================================================
+      		// Project:   SproutCore - JavaScript Application Framework
+      		// Copyright: ©2006-2011 Strobe Inc. and contributors.
+      		//			©2008-2011 Apple Inc. All rights reserved.
+      		// License:   Licensed under MIT license (see license.js)
+      		// ==========================================================================
+      		var nChar, cString= '', j, jLen;
+      		//here we cycle through the characters in the current value
+      		for (j=0, jLen = str.length; j<jLen; j++)
+      		{
+      			nChar = str.charCodeAt(j);
+      			   //here we do the unicode conversion from zenkaku to hankaku roomaji
+      			nChar = ((nChar>=65281 && nChar<=65392)?nChar-65248:nChar);
+      	
+      			//MS IME seems to put this character in as the hyphen from keyboard but not numeric pad...
+      			nChar = ( nChar===12540?45:nChar) ;
+      			cString = cString + String.fromCharCode(nChar);
+      		}
+      		return cString;
+      	}	
 },
      
 RedactorPlugins.xenforo_swith = {
@@ -210,4 +348,17 @@ RedactorPlugins.fullscreen = {
 		this.$el.height(height);
 		this.$content.height(height-toolbar);
 	}
+},
+RedactorPlugins.media = {
+
+	init: function(redactor)
+	{
+		RedactorPlugins.xenforo.loadOverlay('Media', 'media', 500, redactor, RedactorPlugins.media, 'callback');
+	},
+	callback: function(redactor)
+	{
+		Redactor_Media.onload($('#redactor_modal'));
+	}
 }
+
+

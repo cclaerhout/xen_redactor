@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="sedo_redactor" title="Redactor" version_string="0.02" version_id="0" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="sedo_redactor" title="Redactor" version_string="0.03" version_id="1" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
   <admin_templates/>
   <code_events/>
-  <code_event_listeners/>
+  <code_event_listeners>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Sedo_Redactor_Listener_ControllerPublic" callback_method="listen" active="1" description="Controller Public Listener"/>
+  </code_event_listeners>
   <cron/>
   <email_templates/>
   <optiongroups/>
@@ -789,6 +791,40 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 .redactor_toolbar_fullscreen {
     overflow: hidden !important;
 }]]></template>
+    <template title="redactor_dialog.css" version_id="0" version_string="0.02"><![CDATA[.rteTitle{
+	display:none;
+}
+
+#redactor_modal_content > div{
+	margin:5px;
+}]]></template>
+    <template title="redactor_dialog_media" version_id="0" version_string="0.02"><![CDATA[<xen:require js="js/sedo/redactor/plugins/xenforo/templates/media.js" />
+<xen:require css="redactor_dialog.css" />
+
+<form method="post">
+	<div class="rteTitle">{xen:phrase embed_media}</div>
+	
+	<div id="redactor_modal_content">
+		<div>
+			{xen:phrase enter_media_url}:
+			<input id="ctrl_url" name="url" type="text" class="textCtrl rteFocus" {xen:if '{$url}', 'value="{$url}"'} style="width: 99%" />
+		</div>
+		<div>
+			{xen:phrase you_may_embed_media_from_following_sites}:
+			<xen:foreach loop="$sites" value="$site" count="$totalSites" i="$i">
+				<xen:if is="{$site.supported}">
+					<a href="{$site.site_url}" target="_blank" rel="nofollow">{$site.site_title}</a>;
+				</xen:if>
+			</xen:foreach>
+		</div>
+	</div>
+
+	<div id="redactor_modal_footer">
+		<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">Cancel</a>
+		<input type="button" class="redactor_modal_btn rteTrigger" id="redactor_insert_video_btn" value="Insert" />
+		<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+	</div>
+</form>]]></template>
     <template title="redactor_js_lang" version_id="0" version_string="1.0"><![CDATA[var RELANG = {};
 
 var RLANG = {
@@ -865,7 +901,7 @@ var RLANG = {
 	smilies: {xen:helper json, $smilies},
 	bbcode_switch_text: ["{xen:jsescape {xen:phrase use_bb_code_editor}}", "{xen:jsescape {xen:phrase use_rich_text_editor}}"]
 }]]></template>
-    <template title="redactor_js_setup" version_id="0" version_string="1.0"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
+    <template title="redactor_js_setup" version_id="0" version_string="0.02"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
 <xen:require js="js/sedo/redactor/plugins/xenforo/xenforo.js" />
 <xen:require css="redactor.css" />
 <xen:require css="redactor_xenforo.css" />
@@ -884,14 +920,14 @@ var RLANG = {
 
 	<xen:hook name="redactor_js_plugins" params="{xen:array 'editorId={$editorId}'}">
 		<xen:set var="$plugins">
-			'fullscreen', 'xenforo_swith', 'xenforo_removeformat', 'xenforo_undo',  'xenforo_redo'
+			'fullscreen', 'xenforo_swith', 'xenforo_removeformat', 'xenforo_undo',  'xenforo_redo', 'xenforo_media'
 		</xen:set>
 	</xen:hook>
 	
 	<xen:hook name="redactor_js_buttons" params="{xen:array 'editorId={$editorId}'}">
 		<xen:set var="$buttons">
 			'formatting', 'xen_removeformat', '|', 'bold', 'italic', 'underline', 'deleted', '|', 'xen_undo', 'xen_redo', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-			'image', 'video', '#', 'file', 'table', 'link', '|','fontcolor', 'backcolor', '|', '#', 'alignment', '|', 'horizontalrule'
+			'image', 'xen_media', '#', 'file', 'table', 'link', '|','fontcolor', 'backcolor', '|', '#', 'alignment', '|', 'horizontalrule'
 		</xen:set>
 	</xen:hook>
 
@@ -936,7 +972,8 @@ var RLANG = {
 				<xen:hook name="redactor_js_custom_buttons">
 					xen_removeformat: { title: "{xen:jsescape {xen:phrase sedo_redactor_remove_formatting}}", callback: xenforo_init },
 					xen_undo: { title: "{xen:jsescape {xen:phrase sedo_redactor_undo}}", callback: xenforo_init },
-					xen_redo: { title: "{xen:jsescape {xen:phrase sedo_redactor_redo}}", callback: xenforo_init }
+					xen_redo: { title: "{xen:jsescape {xen:phrase sedo_redactor_redo}}", callback: xenforo_init },
+					xen_media: { title: "{xen:jsescape {xen:phrase media}}", callback: xenforo_init },
 
 					<xen:if is="{$customButtons}">
 						<xen:foreach loop="$customButtons" value="$customButton" i="$i" count="$total">
@@ -956,7 +993,7 @@ var RLANG = {
 
 </script>
 </xen:hook>]]></template>
-    <template title="redactor_xenforo.css" version_id="0" version_string="1.0"><![CDATA[body .redactor_toolbar li a.redactor_btn_xen_switch{
+    <template title="redactor_xenforo.css" version_id="0" version_string="0.02"><![CDATA[body .redactor_toolbar li a.redactor_btn_xen_switch{
 	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
 	background-position: 0;
 	position: absolute;
@@ -976,6 +1013,10 @@ body .redactor_toolbar li a.redactor_btn_xen_redo{
 body .redactor_toolbar li a.redactor_btn_xen_removeformat{
 	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
 	background-position: -69px 0;
+}
+
+body .redactor_toolbar li a.redactor_btn_xen_media{
+	background-position: -225px;
 }
 
 <xen:comment>Need to test below css</xen:comment>
