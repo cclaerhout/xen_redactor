@@ -15,8 +15,14 @@ RedactorPlugins.xenforo = {
       			obj.execCommand('removeformat', false);
       			break;
       		case 'xen_media':
-      			RedactorPlugins.media.init(obj); 
+      			RedactorPlugins.xen_media.init(obj); 
       			break;
+      		case 'xen_code':
+      			RedactorPlugins.xen_code.init(obj); 
+      			break;      			
+      		case 'xen_link':
+      			RedactorPlugins.xen_link.init(obj); 
+      			break;      	
 	      	}
 	},
 	loadOverlay:function(title, dialog, width, redactor, src, callback)
@@ -349,15 +355,37 @@ RedactorPlugins.fullscreen = {
 		this.$content.height(height-toolbar);
 	}
 },
-RedactorPlugins.media = {
+RedactorPlugins.xen_media = {
 
 	init: function(redactor)
 	{
-		RedactorPlugins.xenforo.loadOverlay('Media', 'media', 500, redactor, RedactorPlugins.media, 'callback');
+		RedactorPlugins.xenforo.loadOverlay('Media', 'media', 500, redactor, RedactorPlugins.xen_media, 'callback');
 	},
 	callback: function(redactor)
 	{
 		Redactor_Media.onload($('#redactor_modal'));
+	}
+},
+RedactorPlugins.xen_code = {
+
+	init: function(redactor)
+	{
+		RedactorPlugins.xenforo.loadOverlay('Code', 'code', 500, redactor, RedactorPlugins.xen_code, 'callback');
+	},
+	callback: function(redactor)
+	{
+		Redactor_Code.onload($('#redactor_modal'));
+	}
+},
+RedactorPlugins.xen_link = {
+
+	init: function(redactor)
+	{
+		RedactorPlugins.xenforo.loadOverlay('Link', 'link', 500, redactor, RedactorPlugins.xen_link, 'callback');
+	},
+	callback: function(redactor)
+	{
+		Redactor_Link.onload($('#redactor_modal'));
 	}
 }
 

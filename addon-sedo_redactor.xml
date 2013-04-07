@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="sedo_redactor" title="Redactor" version_string="0.03" version_id="1" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="sedo_redactor" title="Redactor" version_string="0.04" version_id="2" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -62,6 +62,10 @@
     <phrase title="sedo_redactor_italic" version_id="0" version_string="1.0"><![CDATA[Italic]]></phrase>
     <phrase title="sedo_redactor_left" version_id="0" version_string="1.0"><![CDATA[Left]]></phrase>
     <phrase title="sedo_redactor_link" version_id="0" version_string="1.0"><![CDATA[Link]]></phrase>
+    <phrase title="sedo_redactor_link_or_mail" version_id="1" version_string="0.03"><![CDATA[Insert link/email]]></phrase>
+    <phrase title="sedo_redactor_mail" version_id="1" version_string="0.03"><![CDATA[Email]]></phrase>
+    <phrase title="sedo_redactor_mail_link" version_id="1" version_string="0.03"><![CDATA[Enter email]]></phrase>
+    <phrase title="sedo_redactor_mail_text" version_id="1" version_string="0.03"><![CDATA[Enter email text]]></phrase>
     <phrase title="sedo_redactor_none" version_id="0" version_string="1.0"><![CDATA[None]]></phrase>
     <phrase title="sedo_redactor_open_link_in_newtab" version_id="0" version_string="1.0"><![CDATA[Open link in newtab]]></phrase>
     <phrase title="sedo_redactor_ordered_list" version_id="0" version_string="1.0"><![CDATA[Ordered list]]></phrase>
@@ -84,12 +88,13 @@
     <phrase title="sedo_redactor_unordered_list" version_id="0" version_string="1.0"><![CDATA[Unordered list]]></phrase>
     <phrase title="sedo_redactor_upload" version_id="0" version_string="1.0"><![CDATA[Upload]]></phrase>
     <phrase title="sedo_redactor_url" version_id="0" version_string="1.0"><![CDATA[Url]]></phrase>
+    <phrase title="sedo_redactor_url_text" version_id="1" version_string="0.03"><![CDATA[Enter URL text]]></phrase>
     <phrase title="sedo_redactor_video_embed_code" version_id="0" version_string="1.0"><![CDATA[Video embed code]]></phrase>
   </phrases>
   <route_prefixes/>
   <style_properties/>
   <templates>
-    <template title="redactor.css" version_id="0" version_string="1.0"><![CDATA[.redactor_box {
+    <template title="redactor.css" version_id="1" version_string="0.03"><![CDATA[.redactor_box {
 	position: relative;
 	border: 1px solid #ddd;
 	overflow: visible;
@@ -114,7 +119,7 @@ body .redactor_box_fullscreen {
     overflow: hidden;
     top: 0;
     width: 100%;
-    z-index: 2000;
+    z-index: 20000;
 }
 
 .redactor_box textarea {
@@ -791,14 +796,77 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 .redactor_toolbar_fullscreen {
     overflow: hidden !important;
 }]]></template>
-    <template title="redactor_dialog.css" version_id="0" version_string="0.02"><![CDATA[.rteTitle{
+    <template title="redactor_dialog.css" version_id="1" version_string="0.03"><![CDATA[.rteTitle{
 	display:none;
 }
 
 #redactor_modal_content > div{
 	margin:5px;
+}
+
+.tab_hide{
+	display:none;
 }]]></template>
-    <template title="redactor_dialog_media" version_id="0" version_string="0.02"><![CDATA[<xen:require js="js/sedo/redactor/plugins/xenforo/templates/media.js" />
+    <template title="redactor_dialog_code" version_id="1" version_string="0.03"><![CDATA[<xen:require js="js/sedo/redactor/plugins/xenforo/templates/code.js" />
+<xen:require css="redactor_dialog.css" />
+
+<form method="post">
+	<div class="rteTitle">{xen:phrase insert_code}</div>
+	
+	<div id="redactor_modal_content">
+		<div>
+			{xen:phrase language}:
+			<select name="type" id="ctrl_type" class="textCtrl">
+				<option value="code">{xen:phrase general_code}</option>
+				<option value="php">PHP</option>
+				<option value="html">HTML</option>
+			</select>
+		</div>
+		<div>
+			{xen:phrase code}:
+			<textarea name="code" id="ctrl_code" name="ctrl_code" style="display: block; width: 98%; height: 100px; resize: none" class="textCtrl code rteFocus"></textarea>
+		</div>
+	</div>
+
+	<div id="redactor_modal_footer">
+		<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">{xen:phrase cancel}</a>
+		<input type="button" class="redactor_modal_btn rteTrigger" id="redactor_insert_code" value="{xen:phrase insert}" />
+		<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+	</div>
+</form>]]></template>
+    <template title="redactor_dialog_link" version_id="1" version_string="0.03"><![CDATA[<xen:require js="js/sedo/redactor/plugins/xenforo/templates/link.js" />
+<xen:require css="redactor_dialog.css" />
+
+<form method="post">
+	<div class="rteTitle">{xen:phrase sedo_redactor_link_or_mail}</div>
+	
+	<div id="redactor_modal_content">
+		<div id="redactor_tabs">
+			<a href="javascript:void(null);" {xen:if '!{$mail}', 'class="redactor_tabs_act"'}>{xen:phrase sedo_redactor_url}</a>
+			<a href="javascript:void(null);" {xen:if '{$mail}', 'class="redactor_tabs_act"'}>{xen:phrase sedo_redactor_mail}</a>
+		</div>
+		<input type="hidden" id="redactor_tab_selected" value="{xen:if '{$isMail}', 2, 1}" />
+		<div class="redactor_tab {xen:if '{$isMail}', 'tab_hide'}" id="redactor_tab1">
+			<label>{xen:phrase enter_link_url}</label>
+			<input id="ctrl_url_link" type="text"  class="redactor_input {xen:if '!{$isMail}', 'rteFocus'}" {xen:if '{$url}', 'value="{$url}"'} />
+			<label>{xen:phrase sedo_redactor_url_text}</label>
+			<input id="ctrl_url_text" type="text" class="redactor_input redactor_link_text" {xen:if '{$urlName}', 'value="{$urlName}"'} />
+		</div>
+		<div class="redactor_tab {xen:if '!{$isMail}', 'tab_hide'}" id="redactor_tab2">
+			<label>{xen:phrase sedo_redactor_mail_link}</label>
+			<input id="ctrl_mail_link" type="text" class="redactor_input {xen:if '{$isMail}', 'rteFocus'}" {xen:if '{$mail}', 'value="{$mail}"'} />
+			<label>{xen:phrase sedo_redactor_mail_text}</label>
+			<input id="ctrl_mail_text" type="text" class="redactor_input redactor_link_text" {xen:if '{$mailName}', 'value="{$mailName}"'} />
+		</div>
+	</div>
+
+	<div id="redactor_modal_footer">
+		<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">{xen:phrase cancel}</a>
+		<input type="button" class="redactor_modal_btn rteTrigger" id="redactor_insert_link" value="{xen:phrase insert}" />
+		<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+	</div>
+</form>]]></template>
+    <template title="redactor_dialog_media" version_id="1" version_string="0.03"><![CDATA[<xen:require js="js/sedo/redactor/plugins/xenforo/templates/media.js" />
 <xen:require css="redactor_dialog.css" />
 
 <form method="post">
@@ -820,8 +888,8 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 	</div>
 
 	<div id="redactor_modal_footer">
-		<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">Cancel</a>
-		<input type="button" class="redactor_modal_btn rteTrigger" id="redactor_insert_video_btn" value="Insert" />
+		<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">{xen:phrase cancel}</a>
+		<input type="button" class="redactor_modal_btn rteTrigger" id="redactor_insert_media" value="{xen:phrase insert}" />
 		<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	</div>
 </form>]]></template>
@@ -901,7 +969,7 @@ var RLANG = {
 	smilies: {xen:helper json, $smilies},
 	bbcode_switch_text: ["{xen:jsescape {xen:phrase use_bb_code_editor}}", "{xen:jsescape {xen:phrase use_rich_text_editor}}"]
 }]]></template>
-    <template title="redactor_js_setup" version_id="0" version_string="0.02"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
+    <template title="redactor_js_setup" version_id="1" version_string="0.03"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
 <xen:require js="js/sedo/redactor/plugins/xenforo/xenforo.js" />
 <xen:require css="redactor.css" />
 <xen:require css="redactor_xenforo.css" />
@@ -920,14 +988,15 @@ var RLANG = {
 
 	<xen:hook name="redactor_js_plugins" params="{xen:array 'editorId={$editorId}'}">
 		<xen:set var="$plugins">
-			'fullscreen', 'xenforo_swith', 'xenforo_removeformat', 'xenforo_undo',  'xenforo_redo', 'xenforo_media'
+			'fullscreen', 'xenforo_swith', 'xenforo_removeformat', 'xenforo_undo',  'xenforo_redo', 'xenforo_media', 'xenforo_code',
+			'xenforo_link'
 		</xen:set>
 	</xen:hook>
 	
 	<xen:hook name="redactor_js_buttons" params="{xen:array 'editorId={$editorId}'}">
 		<xen:set var="$buttons">
 			'formatting', 'xen_removeformat', '|', 'bold', 'italic', 'underline', 'deleted', '|', 'xen_undo', 'xen_redo', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-			'image', 'xen_media', '#', 'file', 'table', 'link', '|','fontcolor', 'backcolor', '|', '#', 'alignment', '|', 'horizontalrule'
+			'image', 'xen_media', '#', 'file', 'table', 'xen_link', '|','fontcolor', 'backcolor', '|', '#', 'alignment', '|', 'horizontalrule', 'xen_code'
 		</xen:set>
 	</xen:hook>
 
@@ -960,10 +1029,9 @@ var RLANG = {
       		$editor.redactor(
       		{
       			focus: true,
-      			iframe: true,
-			convertDivs: true,
+      			iframe: false,
 			direction: '{$visitorLanguage.text_direction}',
-      			//emptyHtml: '<span><br /></span>',
+			minHeight: 105,
       			plugins: [{$plugins}],
       			buttons: [{$buttons}],
 			params: {<xen:include template="redactor_js_params" />},
@@ -974,6 +1042,8 @@ var RLANG = {
 					xen_undo: { title: "{xen:jsescape {xen:phrase sedo_redactor_undo}}", callback: xenforo_init },
 					xen_redo: { title: "{xen:jsescape {xen:phrase sedo_redactor_redo}}", callback: xenforo_init },
 					xen_media: { title: "{xen:jsescape {xen:phrase media}}", callback: xenforo_init },
+					xen_code: { title: "{xen:jsescape {xen:phrase insert_code}}", callback: xenforo_init },
+					xen_link: { title: "{xen:jsescape {xen:phrase sedo_redactor_link_or_mail}}", callback: xenforo_init },
 
 					<xen:if is="{$customButtons}">
 						<xen:foreach loop="$customButtons" value="$customButton" i="$i" count="$total">
@@ -993,30 +1063,70 @@ var RLANG = {
 
 </script>
 </xen:hook>]]></template>
-    <template title="redactor_xenforo.css" version_id="0" version_string="0.02"><![CDATA[body .redactor_toolbar li a.redactor_btn_xen_switch{
+    <template title="redactor_xenforo.css" version_id="1" version_string="0.03"><![CDATA[<xen:comment>
+		Reset Css
+</xen:comment>
+
+.redactor_MessageEditor p {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.redactor_MessageEditor ol li {
+	list-style: decimal outside;	
+}
+
+.redactor_MessageEditor ul li {
+	list-style: disc outside;
+}
+
+.redactor_MessageEditor ul ul li {
+	list-style: circle outside;
+}
+
+.redactor_MessageEditor ul ul ul li {
+	list-style: square outside;
+}
+
+
+<xen:comment>
+		Buttons
+</xen:comment>
+
+body .redactor_toolbar li a.redactor_btn_xen_switch{
 	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
-	background-position: 0;
+	background-position: -5px;
 	position: absolute;
 	right: 28px;
 }
 
 body .redactor_toolbar li a.redactor_btn_xen_undo{
 	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
-	background-position: -23px 0;
+	background-position: -34px 0;
 }
 
 body .redactor_toolbar li a.redactor_btn_xen_redo{
 	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
-	background-position: -46px 0;
+	background-position: -64px 0;
 }
 
 body .redactor_toolbar li a.redactor_btn_xen_removeformat{
 	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
-	background-position: -69px 0;
+	background-position: -93px 0;
 }
+
+body .redactor_toolbar li a.redactor_btn_xen_code{
+	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);
+	background-position: -124px 0;
+}
+
 
 body .redactor_toolbar li a.redactor_btn_xen_media{
 	background-position: -225px;
+}
+
+body .redactor_toolbar li a.redactor_btn_xen_link{
+	background-position: -300px;
 }
 
 <xen:comment>Need to test below css</xen:comment>

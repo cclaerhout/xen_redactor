@@ -32,6 +32,7 @@
 				//Check if content empty: if yes wrap html with tags to avoid caret problems
 				html = ($('<p>'+ed.getCode()+'</p>').text()) ? ajaxData.matchBbCode : '<p>'+ajaxData.matchBbCode+'</p>'; 
 
+	      			ed.$editor.focus();
 				ed.restoreSelection();
 				ed.execCommand('inserthtml', html);
 				ed.modalClose();

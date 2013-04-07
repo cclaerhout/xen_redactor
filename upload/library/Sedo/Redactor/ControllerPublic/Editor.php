@@ -20,6 +20,7 @@ class Sedo_Redactor_ControllerPublic_Editor extends XFCP_Sedo_Redactor_Controlle
 			throw new XenForo_Exception(new XenForo_Phrase('submitted_message_is_too_long_to_be_processed'), true);
 		}
 
+		//Check URL
 		$regex_url_module = '(?:(?:https?|ftp|file)://|www\.|ftp\.)[-\p{L}0-9+&@\#/%=~_|$?!:,.]*[-\p{L}0-9+&@\#/%=~_|$]';
 		$regex_url = '#^(?:\s+)?<a[^>]+?(?P<url>'.$regex_url_module.')[^>]*?>(?P<urlName>.+?)</a>(?:\s+)?$#ui';
 	
@@ -33,6 +34,21 @@ class Sedo_Redactor_ControllerPublic_Editor extends XFCP_Sedo_Redactor_Controlle
 
 		$url = (isset($matches['url'])) ? $matches['url'] : null;
 		$urlName = (isset($matches['urlName'])) ? $matches['urlName'] : null;
+
+		//Check EMAIL
+		$regex_mail_module = '[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}';
+		$regex_mail = '#^(?:\s+)?<a[^>]+?(?P<mail>'.$regex_mail_module.')[^>]*?>(?P<mailName>.+?)</a>(?:\s+)?$#ui';
+
+		$isMail = (!empty($selectedHtmlParent) && preg_match($regex_mail, $selectedHtmlParent, $matches)) ? true : false;
+
+		if(!$isMail)
+		{
+			//Should not be needed
+			$isMail = (!empty($selectedHtml) && preg_match($regex_mail, $selectedHtml, $matches)) ? true : false;		
+		}
+
+		$mail = (isset($matches['mail'])) ? $matches['mail'] : null;
+		$mailName = (isset($matches['mailName'])) ? $matches['mailName'] : null;
 		
 		$viewParams = array(
 			'javaScriptSource' => XenForo_Application::$javaScriptUrl,
@@ -42,11 +58,14 @@ class Sedo_Redactor_ControllerPublic_Editor extends XFCP_Sedo_Redactor_Controlle
 				'bbCode' => $this->getHelper('Editor')->convertEditorHtmlToBbCode($selectedHtml, $this->_input),
 				'parentText' => strip_tags($selectedHtmlParent),
 				'parentHtml' => $selectedHtmlParent,
-				'parentBbCode' => $this->getHelper('Editor')->convertEditorHtmlToBbCode($selectedHtmlParent, $this->_input),
-				'isUrl' => $isUrl
+				'parentBbCode' => $this->getHelper('Editor')->convertEditorHtmlToBbCode($selectedHtmlParent, $this->_input)
 			),
+			'isUrl' => $isUrl,
 			'url' => $url,
-			'urlName' => $urlName
+			'urlName' => $urlName,
+			'isMail' => $isMail,
+			'mail' => $mail,
+			'mailName' => $mailName
 		);
 
 		if ($dialog == 'media')
