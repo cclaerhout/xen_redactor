@@ -23,20 +23,34 @@ RedactorPlugins.xenforo = {
       		case 'xen_link':
       			RedactorPlugins.xen_link.init(obj); 
       			break;      	
+      		case 'xen_colors':
+      			RedactorPlugins.xen_colors.init(obj, event, key);
+      			break;
+      		case 'xen_backcolors':
+      			RedactorPlugins.xen_colors.init(obj, event, key);
+      			break;
 	      	}
 	},
+	dropdowns:function(obj, event, key)
+	{
+	      	switch (key) {
+     		case 'xen_colors':
+      			//RedactorPlugins.xen_colors.buildColorPicker(obj,'', key); 
+      			break;      	
+	      	}	      	
+	},	
 	loadOverlay:function(title, dialog, width, redactor, src, callback)
 	{
 		var t = RedactorPlugins.xenforo,
 		selectedHtmlParent = $(redactor.getParentNode()).html(),
-		selectedHtml = redactor.getSelectedHtml;
+		selectedHtml = redactor.getSelectedHtml,
+		isEmpty = ($('<p>'+redactor.getCode()+'</p>').text()) ? false : true;
 		
 		if (typeof(callback) !== 'string' ||  typeof(src[callback]) !== 'function')
 		{
 			callback = false;
 		}
 
-		redactor.saveSelection();
 		redactor.setBuffer();
 
 		XenForo.myRedactor = {
@@ -47,7 +61,8 @@ RedactorPlugins.xenforo = {
 			src: src,
 			callback: callback,
 			selectedHtmlParent: selectedHtml,
-			selectedHtml: selectedHtml
+			selectedHtml: selectedHtml,
+			isEmpty: isEmpty
 		};
 
 		XenForo.ajax('index.php?editor/redactor-dialog', { dialog: dialog, selectedHtmlParent: selectedHtmlParent, selectedHtml: selectedHtml}, t._overlayLoader);
@@ -162,7 +177,7 @@ RedactorPlugins.xenforo = {
       	}	
 },
      
-RedactorPlugins.xenforo_swith = {
+RedactorPlugins.xenforo_switch = {
      
 	init: function()
 	{
@@ -387,6 +402,183 @@ RedactorPlugins.xen_link = {
 	{
 		Redactor_Link.onload($('#redactor_modal'));
 	}
+},
+RedactorPlugins.xen_colors = {
+
+	eraseColors: false, //Doesn't work well, better to disable it
+	init: function(redactor, event, key)
+	{
+	      	this.ed = redactor;
+	      	this.key = key;
+
+		if (key === 'xen_colors'){
+			$target = $('.xen_colors_dropdown');
+		}
+		else if (key === 'xen_backcolors') {
+			$target = $('.xen_backcolors_dropdown');		
+		}
+
+		if($target.length == 0) {
+	      		var dropdown = $('<div class="redactor_dropdown '+key+'_dropdown" style="display:none">'),
+	      		button = redactor.getBtn(key);
+
+      			dropdown = this.buildColorPicker(dropdown, key);
+	      		redactor.dropdowns.push(dropdown.appendTo($(document.body)));
+	
+	      		// observing dropdown
+	    		redactor.hdlShowDropDown = $.proxy(function(e) { redactor.showDropDown(e, dropdown, key); }, this);
+	    		button.click(redactor.hdlShowDropDown);
+	    		
+			//Trigger dropdown
+			button.trigger('click');
+		}
+	},
+      	buildColorPicker: function(dropdown, key)
+      	{
+      		var mode,
+      		ed = this.ed;
+
+      		if (key === 'xen_backcolors') {
+      			if (ed.browser('msie')) {
+      				mode = 'BackColor';
+      			}
+      			else {
+      				mode = 'hilitecolor';
+      			}
+      		}
+      		else {
+      			mode = 'forecolor';
+      		}
+
+     		$(dropdown).width(210);
+
+		$colors = $('<div class="'+key+'_block"></div>');
+
+      		var len = ed.opts.colors.length;
+      		for (var i = 0; i < len; ++i)
+      		{
+      			var color = ed.opts.colors[i];
+
+      			var swatch = $('<a rel="' + color + '" href="javascript:void(null);" class="redactor_color_link"></a>').css({ 'backgroundColor': color });
+			$colors.append(swatch);
+
+      			var _self = ed;
+      			$(swatch).click(function()
+      			{
+      				$('.'+key+'_dropdown').hide();
+      				
+      				_self.setBuffer();
+      				
+      				_self.execCommand(mode, $(this).attr('rel'));
+
+      				if (mode === 'forecolor')
+      				{
+      					_self.$editor.find('font').replaceWith(function() {
+
+      						return $('<span style="color: ' + $(this).attr('color') + ';">' + $(this).html() + '</span>');
+
+      					});
+      				}
+
+      				if (_self.browser('msie') && mode === 'BackColor')
+      				{
+      					_self.$editor.find('font').replaceWith(function() {
+
+      						return $('<span style="' + $(this).attr('style') + '">' + $(this).html() + '</span>');
+
+      					});
+      				}
+      				
+      				_self.syncCode();
+      			});
+      		}
+
+		$(dropdown).append($colors);
+
+		$tools = $('<div class="xen_tools_block"></div>');
+
+      		var picker = $('<a href="javascript:void(null);" class="redactor_color_picker"></a>')
+      			.html(ed.opts.params.xenforo.colorpicker)
+      			.click($.proxy(this.loadOverlay, this));
+
+		$tools.append(picker);
+
+		if(this.eraseColors === true) {
+	      		var elnone = $('<a href="javascript:void(null);" class="redactor_color_none"></a>').html(RLANG.none);
+	
+	      		if (key === 'xen_backcolors'){
+	      			elnone.click($.proxy(this.setBackgroundNone, this));
+	      		}
+	      		else{
+	      			elnone.click($.proxy(this.setColorNone, this));
+	      		}
+	
+	      		$tools.append(elnone);
+	      	}
+
+		$(dropdown).append($tools);
+
+      		return dropdown;
+      	},
+      	setBackgroundNone: function()
+      	{
+      		$('.'+this.key+'_dropdown').hide();
+      		
+      		ed = this.ed;
+		ed.$editor.focus();
+      		ed.restoreSelection();
+      		ed.setBuffer();
+
+		var hasSelection = ed.getSelectedHtml();
+		
+		if(hasSelection) {
+			var regex = new RegExp('background-color(\s*?)[:].*?(?=[;"])', "gi"),
+			selection = hasSelection.replace(regex, '');
+			ed.execCommand('inserthtml', selection);
+		}
+
+      		$(ed.getParentNode())
+      			.css('background-color', 'transparent')
+      			.children().each(function(){
+      			$(this).css('background-color', 'transparent');
+      		});
+      		
+      		ed.syncCode();
+      	},
+      	setColorNone: function()
+      	{
+      		$('.'+this.key+'_dropdown').hide();
+      		
+      		ed = this.ed;
+		ed.$editor.focus();
+      		ed.restoreSelection();
+      		ed.setBuffer();
+
+		var hasSelection = ed.getSelectedHtml();
+
+		if(hasSelection) {
+			var regex = new RegExp('color(\s*?)[:].*?(?=[;"])|color=".*?"', "gi"),
+			selection = hasSelection.replace(regex, '');
+			ed.execCommand('inserthtml', selection);
+		}
+
+		$(ed.getParentNode())
+			.attr('color', '').css('color', '')
+			.children().each(function(){
+				$(this).attr('color', '').css('color', '');
+			});
+
+      		ed.syncCode();
+      	}, 
+      	loadOverlay: function()
+      	{
+      		$('.'+this.key+'_dropdown').hide();
+		RedactorPlugins.xenforo.loadOverlay('Colors', 'colors', 500, this.ed, RedactorPlugins.xen_colors, 'callback');
+      	},    	
+	callback: function(redactor)
+	{
+		Redactor_Colors.onload($('#redactor_modal'));
+	}      	
 }
 
 
