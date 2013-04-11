@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="sedo_redactor" title="Redactor" version_string="0.05" version_id="3" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="sedo_redactor" title="Redactor" version_string="0.06" version_id="4" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -95,7 +95,7 @@
   <route_prefixes/>
   <style_properties/>
   <templates>
-    <template title="redactor.css" version_id="2" version_string="0.04"><![CDATA[.redactor_box {
+    <template title="redactor.css" version_id="3" version_string="0.05"><![CDATA[.redactor_box {
 	position: relative;
 	border: 1px solid #ddd;
 	overflow: visible;
@@ -370,6 +370,7 @@ body .redactor_air .redactor_toolbar {
 }
 .redactor_toolbar .redactor_line {
 	height:34px;
+	border-bottom:1px dashed #DBDBDB;
 }
 
 .redactor_toolbar .redactor_line li {
@@ -1027,7 +1028,7 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 		<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	</div>
 </form>]]></template>
-    <template title="redactor_js_lang" version_id="2" version_string="0.04"><![CDATA[var RELANG = {};
+    <template title="redactor_js_lang" version_id="3" version_string="0.05"><![CDATA[var RELANG = {};
 
 var RLANG = {
 	html: "{xen:jsescape {xen:phrase sedo_redactor_html}}",
@@ -1096,13 +1097,15 @@ var RLANG = {
 	underline: "{xen:jsescape {xen:phrase sedo_redactor_underline}}",
 	alignment: "{xen:jsescape {xen:phrase sedo_redactor_alignment}}"
 };]]></template>
-    <template title="redactor_js_params" version_id="2" version_string="0.04"><![CDATA[xenforo: {
+    <template title="redactor_js_params" version_id="3" version_string="0.05"><![CDATA[xenforo: {
 	document_base_url: "{xen:jsescape $requestPaths.fullBasePath}",	
 	smilies: {xen:helper json, $smilies},
 	bbcode_switch_text: ["{xen:jsescape {xen:phrase use_bb_code_editor}}", "{xen:jsescape {xen:phrase use_rich_text_editor}}"],
-	colorpicker: "{xen:jsescape {xen:phrase sedo_redactor_colorpicker}}"
+	colorpicker: "{xen:jsescape {xen:phrase sedo_redactor_colorpicker}}",
+	fontsize: "{xen:jsescape {xen:phrase font_size}}",
+	fontfamily: "{xen:jsescape {xen:phrase font_family}}"
 }]]></template>
-    <template title="redactor_js_setup" version_id="2" version_string="0.04"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
+    <template title="redactor_js_setup" version_id="3" version_string="0.05"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
 <xen:require js="js/sedo/redactor/plugins/xenforo/xenforo.js" />
 <xen:require css="redactor.css" />
 <xen:require css="redactor_xenforo.css" />
@@ -1121,14 +1124,15 @@ var RLANG = {
 
 	<xen:hook name="redactor_js_plugins" params="{xen:array 'editorId={$editorId}'}">
 		<xen:set var="$plugins">
-			'fullscreen', 'xenforo_switch', 'xenforo_colors'
+			'fullscreen', 'xenforo_switch', 'xenforo_colors', 'xen_fonts'
 		</xen:set>
 	</xen:hook>
 	
 	<xen:hook name="redactor_js_buttons" params="{xen:array 'editorId={$editorId}'}">
 		<xen:set var="$buttons">
-			'formatting', 'xen_removeformat', '|', 'bold', 'italic', 'underline', 'deleted', '|', 'xen_undo', 'xen_redo', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-			'image', 'xen_media', '#', 'file', 'table', 'xen_link', '|','xen_colors', 'xen_backcolors', '|', '#', 'alignment', '|', 'horizontalrule', 'xen_code'
+			'formatting', 'xen_removeformat', '|', 'xen_fontSize', 'xen_fontNames', 'alignment', '|', 'xen_colors', 'xen_backcolors', '|', 'xen_undo', 'xen_redo', '#', 
+			 'bold', 'italic', 'underline', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|','image', 'xen_media', '|', 'xen_link', 'xen_code', '#',
+			 'file', 'table', '|', 'horizontalrule'
 		</xen:set>
 	</xen:hook>
 
@@ -1137,14 +1141,17 @@ var RLANG = {
 		$editor.css('visibility', '').show();
 
 		<xen:hook name="redactor_js_custom_functions">
-			function xenforo_init(obj, event, key)
-			{
-				RedactorPlugins.xenforo.init(obj, event, key);
+			function xenforo_init(o,e,k){
+				RedactorPlugins.xenforo.init(o,e,k);
 			}
 
-			function xenforo_dropdowns(obj, event, key)
-			{
-				RedactorPlugins.xenforo.dropdowns(obj, event, key);
+			function xenforo_dropdowns(k){
+				return RedactorPlugins.xenforo.dropdowns(k);
+			}
+
+
+			function commandCallbacks(o,c){
+				RedactorPlugins.xenforo.commandCallbacks(o,c);
 			}
 
       			<xen:if is="{$customButtons}">
@@ -1183,6 +1190,8 @@ var RLANG = {
 					xen_link: { title: "{xen:jsescape {xen:phrase sedo_redactor_link_or_mail}}", callback: xenforo_init },
 					xen_colors: { title: "{xen:jsescape {xen:phrase sedo_redactor_font_color}}", callback: xenforo_init },
 					xen_backcolors: { title: "{xen:jsescape {xen:phrase sedo_redactor_back_color}}", callback: xenforo_init },
+					xen_fontSize: { title: "{xen:jsescape {xen:phrase font_size}}", dropdown: xenforo_dropdowns('xen_fontSize') },
+					xen_fontNames: { title: "{xen:jsescape {xen:phrase font_family}}", dropdown: xenforo_dropdowns('xen_fontNames') },
 
 					<xen:if is="{$customButtons}">
 						<xen:foreach loop="$customButtons" value="$customButton" i="$i" count="$total">
@@ -1192,7 +1201,8 @@ var RLANG = {
 						</xen:foreach>
 					</xen:if>
 				</xen:hook>
-      			}
+      			},
+			execCommandCallback: function(obj, command) { commandCallbacks(obj, command) } 
       		});
 
 		$editor.data('editorActivated', true);
@@ -1202,13 +1212,20 @@ var RLANG = {
 
 </script>
 </xen:hook>]]></template>
-    <template title="redactor_xenforo.css" version_id="2" version_string="0.04"><![CDATA[<xen:comment>
+    <template title="redactor_xenforo.css" version_id="3" version_string="0.05"><![CDATA[<xen:comment>
 		Reset Css
 </xen:comment>
 
 .redactor_MessageEditor p {
 	margin: 0 !important;
 	padding: 0 !important;
+	font-size: 11pt;
+	line-height:100%;
+}
+
+.redactor_MessageEditor span {
+	font-size: 11pt;
+	line-height:100%;
 }
 
 .redactor_MessageEditor ol li {
@@ -1231,6 +1248,103 @@ var RLANG = {
 <xen:comment>
 		Buttons
 </xen:comment>
+
+body .redactor_toolbar li a.textbutton{
+	background-image: none;
+	border: 1px solid #898989;
+	color: #555555;
+	display: inline;
+	font-size: 10pt !important;
+	line-height: 20pt !important;
+	padding: 4px;
+	text-indent: 1px !important;
+	vertical-align: middle;
+	margin: 0 3px;
+}
+
+body .redactor_toolbar li a.textbutton:hover{
+	text-decoration:none;
+}
+
+.redactor_dropdown.dp_fontsize{
+	width:50px;
+	height: 75px;
+	overflow: auto;
+}
+
+.redactor_dropdown.dp_fontsize a{
+	text-align:center;
+}
+
+.redactor_dropdown .redactor_size_1 {
+	font-size: xx-small;
+}
+
+.redactor_dropdown .redactor_size_2 {
+	font-size: x-small;
+}
+
+.redactor_dropdown .redactor_size_3 {
+	font-size: small;
+}
+
+.redactor_dropdown .redactor_size_4 {
+	font-size: medium;
+}
+
+.redactor_dropdown .redactor_size_5 {
+	font-size: large;
+}
+
+.redactor_dropdown .redactor_size_6 {
+	font-size: x-large;
+}
+
+.redactor_dropdown .redactor_size_7 {
+	font-size: xx-large;
+}
+
+.redactor_dropdown.dp_fontname{
+	height: 75px;
+	overflow: auto;
+}
+
+.redactor_dropdown .redactor_font_andalemono {
+	font-family: andale mono,times;
+}
+.redactor_dropdown .redactor_font_arial {
+	font-family: arial,helvetica,sans-serif;
+}
+.redactor_dropdown .redactor_font_arialblack {
+	font-family: arial black,avant garde;
+}
+.redactor_dropdown .redactor_font_bookantiqua {
+	font-family: book antiqua,palatino;
+}
+.redactor_dropdown .redactor_font_couriernew {
+	font-family: courier new,courier;
+}
+.redactor_dropdown .redactor_font_georgia {
+	font-family: georgia,palatino;
+}
+.redactor_dropdown .redactor_font_helvetica {
+	font-family: helvetica;
+}
+.redactor_dropdown .redactor_font_impact {
+	font-family: impact,chicago;
+}
+.redactor_dropdown .redactor_font_tahoma {
+	font-family: tahoma,arial,helvetica,sans-serif;
+}
+.redactor_dropdown .redactor_font_timesnewroman {
+	font-family: times new roman,times;
+}
+.redactor_dropdown .redactor_font_trebuchetms {
+	font-family: trebuchet ms,geneva;
+}
+.redactor_dropdown .redactor_font_verdana {
+	font-family: verdana,geneva;
+}
 
 body .redactor_toolbar li a.redactor_btn_xen_switch{
 	background-image:url(styles/sedo/redactor/xenforo_redactor_sd.png);

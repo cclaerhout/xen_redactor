@@ -3,41 +3,53 @@ if (typeof RedactorPlugins === 'undefined') var RedactorPlugins = {};
 RedactorPlugins.xenforo = {
 	init:function(obj, event, key)
 	{
-	      	switch (key) {
-      		case 'xen_undo': 
-      			obj.execCommand('undo', false);
-      			break;
-      		case 'xen_redo': 
-      			obj.execCommand('redo', false);
-      			break;
-      		case 'xen_removeformat':
-      			obj.inactiveAllButtons(); 
-      			obj.execCommand('removeformat', false);
-      			break;
-      		case 'xen_media':
-      			RedactorPlugins.xen_media.init(obj); 
-      			break;
-      		case 'xen_code':
-      			RedactorPlugins.xen_code.init(obj); 
-      			break;      			
-      		case 'xen_link':
-      			RedactorPlugins.xen_link.init(obj); 
-      			break;      	
-      		case 'xen_colors':
-      			RedactorPlugins.xen_colors.init(obj, event, key);
-      			break;
-      		case 'xen_backcolors':
-      			RedactorPlugins.xen_colors.init(obj, event, key);
-      			break;
-	      	}
+		switch (key) {
+	  		case 'xen_undo': 
+	  			obj.shortcuts(event, 'undo');
+	  			break;
+	  		case 'xen_redo': 
+	  			obj.shortcuts(event, 'redo');
+	  			break;
+	  		case 'xen_removeformat':
+	  			obj.inactiveAllButtons(); 
+	  			obj.execCommand('removeformat', false);
+	  			break;
+	  		case 'xen_media':
+	  			RedactorPlugins.xen_media.init(obj); 
+	  			break;
+	  		case 'xen_code':
+	  			RedactorPlugins.xen_code.init(obj); 
+	  			break;	  			
+	  		case 'xen_link':
+	  			RedactorPlugins.xen_link.init(obj); 
+	  			break;	  	
+	  		case 'xen_colors':
+	  			RedactorPlugins.xen_colors.init(obj, event, key);
+	  			break;
+	  		case 'xen_backcolors':
+	  			RedactorPlugins.xen_colors.init(obj, event, key);
+	  			break;
+		}
 	},
-	dropdowns:function(obj, event, key)
+	dropdowns:function(key)
 	{
-	      	switch (key) {
-     		case 'xen_colors':
-      			//RedactorPlugins.xen_colors.buildColorPicker(obj,'', key); 
-      			break;      	
-	      	}	      	
+		switch (key) {
+	 		case 'xen_fontNames':
+	 		case 'xen_fontSize':
+				return RedactorPlugins.xen_fonts.dropdown(key);
+	  		break;
+		}		  	
+	},
+	commandCallbacks:function(obj, command)
+	{
+		  	switch (command) {
+		 		case 'fontSize':
+					RedactorPlugins.xen_fonts.commandFontSize(obj);
+		  			break;
+		 		case 'fontName':
+					RedactorPlugins.xen_fonts.commandFontName(obj);
+		  			break;
+		  	}		
 	},	
 	loadOverlay:function(title, dialog, width, redactor, src, callback)
 	{
@@ -176,9 +188,9 @@ RedactorPlugins.xenforo = {
       		return cString;
       	}	
 },
-     
+	 
 RedactorPlugins.xenforo_switch = {
-     
+	 
 	init: function()
 	{
 		this.addBtn('xen_switch', this.opts.params.xenforo.bbcode_switch_text[0], function(obj)
@@ -227,7 +239,7 @@ RedactorPlugins.xenforo_switch = {
       			);
 
       		$existingTextArea.attr('disabled', true);
-		$container.after($textContainer);
+    		$container.after($textContainer);
 
       		if ($.browser.mozilla)
       		{
@@ -263,8 +275,8 @@ RedactorPlugins.xenforo_switch = {
       			return;
       		}
 
-		$container = this.$box;
-		$existingTextArea = this.$el;
+	    	$container = this.$box;
+	    	$existingTextArea = this.$el;
 
       		if (!$existingTextArea.attr('disabled'))
       		{
@@ -283,7 +295,6 @@ RedactorPlugins.xenforo_switch = {
 },
 
 RedactorPlugins.fullscreen = {
-
 	init: function()
 	{	
 		this.fullscreen = false;
@@ -370,6 +381,7 @@ RedactorPlugins.fullscreen = {
 		this.$content.height(height-toolbar);
 	}
 },
+
 RedactorPlugins.xen_media = {
 
 	init: function(redactor)
@@ -381,6 +393,7 @@ RedactorPlugins.xen_media = {
 		Redactor_Media.onload($('#redactor_modal'));
 	}
 },
+
 RedactorPlugins.xen_code = {
 
 	init: function(redactor)
@@ -392,6 +405,7 @@ RedactorPlugins.xen_code = {
 		Redactor_Code.onload($('#redactor_modal'));
 	}
 },
+
 RedactorPlugins.xen_link = {
 
 	init: function(redactor)
@@ -403,13 +417,14 @@ RedactorPlugins.xen_link = {
 		Redactor_Link.onload($('#redactor_modal'));
 	}
 },
+
 RedactorPlugins.xen_colors = {
 
 	eraseColors: false, //Doesn't work well, better to disable it
 	init: function(redactor, event, key)
 	{
-	      	this.ed = redactor;
-	      	this.key = key;
+		  	this.ed = redactor;
+		  	this.key = key;
 
 		if (key === 'xen_colors'){
 			$target = $('.xen_colors_dropdown');
@@ -419,16 +434,16 @@ RedactorPlugins.xen_colors = {
 		}
 
 		if($target.length == 0) {
-	      		var dropdown = $('<div class="redactor_dropdown '+key+'_dropdown" style="display:none">'),
-	      		button = redactor.getBtn(key);
+		  		var dropdown = $('<div class="redactor_dropdown '+key+'_dropdown" style="display:none">'),
+		  		button = redactor.getBtn(key);
 
-      			dropdown = this.buildColorPicker(dropdown, key);
-	      		redactor.dropdowns.push(dropdown.appendTo($(document.body)));
+	  			dropdown = this.buildColorPicker(dropdown, key);
+		  		redactor.dropdowns.push(dropdown.appendTo($(document.body)));
 	
-	      		// observing dropdown
-	    		redactor.hdlShowDropDown = $.proxy(function(e) { redactor.showDropDown(e, dropdown, key); }, this);
-	    		button.click(redactor.hdlShowDropDown);
-	    		
+		  		// observing dropdown
+				redactor.hdlShowDropDown = $.proxy(function(e) { redactor.showDropDown(e, dropdown, key); }, this);
+				button.click(redactor.hdlShowDropDown);
+				
 			//Trigger dropdown
 			button.trigger('click');
 		}
@@ -452,7 +467,7 @@ RedactorPlugins.xen_colors = {
 
      		$(dropdown).width(210);
 
-		$colors = $('<div class="'+key+'_block"></div>');
+      		$colors = $('<div class="'+key+'_block"></div>');
 
       		var len = ed.opts.colors.length;
       		for (var i = 0; i < len; ++i)
@@ -460,7 +475,7 @@ RedactorPlugins.xen_colors = {
       			var color = ed.opts.colors[i];
 
       			var swatch = $('<a rel="' + color + '" href="javascript:void(null);" class="redactor_color_link"></a>').css({ 'backgroundColor': color });
-			$colors.append(swatch);
+    	  		$colors.append(swatch);
 
       			var _self = ed;
       			$(swatch).click(function()
@@ -491,51 +506,51 @@ RedactorPlugins.xen_colors = {
       				
       				_self.syncCode();
       			});
-      		}
+        	}
 
-		$(dropdown).append($colors);
-
-		$tools = $('<div class="xen_tools_block"></div>');
+	      	$(dropdown).append($colors);
+	
+	      	$tools = $('<div class="xen_tools_block"></div>');
 
       		var picker = $('<a href="javascript:void(null);" class="redactor_color_picker"></a>')
       			.html(ed.opts.params.xenforo.colorpicker)
       			.click($.proxy(this.loadOverlay, this));
 
-		$tools.append(picker);
+	      	$tools.append(picker);
 
-		if(this.eraseColors === true) {
-	      		var elnone = $('<a href="javascript:void(null);" class="redactor_color_none"></a>').html(RLANG.none);
-	
-	      		if (key === 'xen_backcolors'){
-	      			elnone.click($.proxy(this.setBackgroundNone, this));
-	      		}
-	      		else{
-	      			elnone.click($.proxy(this.setColorNone, this));
-	      		}
-	
-	      		$tools.append(elnone);
+	      	if(this.eraseColors === true) {
+	      	  		var elnone = $('<a href="javascript:void(null);" class="redactor_color_none"></a>').html(RLANG.none);
+	      
+	      	  		if (key === 'xen_backcolors'){
+	      	  			elnone.click($.proxy(this.setBackgroundNone, this));
+	      	  		}
+	      	  		else{
+	      	  			elnone.click($.proxy(this.setColorNone, this));
+	      	  		}
+	      
+	      	  		$tools.append(elnone);
 	      	}
 
-		$(dropdown).append($tools);
-
-      		return dropdown;
-      	},
-      	setBackgroundNone: function()
-      	{
-      		$('.'+this.key+'_dropdown').hide();
-      		
-      		ed = this.ed;
-		ed.$editor.focus();
-      		ed.restoreSelection();
-      		ed.setBuffer();
-
-		var hasSelection = ed.getSelectedHtml();
+	      	$(dropdown).append($tools);
+	
+	        return dropdown;
+	},
+	setBackgroundNone: function()
+	{
+		$('.'+this.key+'_dropdown').hide();
 		
-		if(hasSelection) {
-			var regex = new RegExp('background-color(\s*?)[:].*?(?=[;"])', "gi"),
-			selection = hasSelection.replace(regex, '');
-			ed.execCommand('inserthtml', selection);
-		}
+		ed = this.ed;
+      		ed.$editor.focus();
+		ed.restoreSelection();
+		ed.setBuffer();
+	
+	      	var hasSelection = ed.getSelectedHtml();
+	      	
+	      	if(hasSelection) {
+	      		var regex = new RegExp('background-color(\s*?)[:].*?(?=[;"])', "gi"),
+	      		selection = hasSelection.replace(regex, '');
+	      		ed.execCommand('inserthtml', selection);
+	      	}
 
       		$(ed.getParentNode())
       			.css('background-color', 'transparent')
@@ -544,41 +559,180 @@ RedactorPlugins.xen_colors = {
       		});
       		
       		ed.syncCode();
-      	},
-      	setColorNone: function()
-      	{
+        },
+       	setColorNone: function()
+       	{
       		$('.'+this.key+'_dropdown').hide();
       		
       		ed = this.ed;
-		ed.$editor.focus();
+      	      	ed.$editor.focus();
       		ed.restoreSelection();
       		ed.setBuffer();
 
-		var hasSelection = ed.getSelectedHtml();
+	      	var hasSelection = ed.getSelectedHtml();
+	
+	      	if(hasSelection) {
+	      		var regex = new RegExp('color(\s*?)[:].*?(?=[;"])|color=".*?"', "gi"),
+	      		selection = hasSelection.replace(regex, '');
+	      		ed.execCommand('inserthtml', selection);
+	      	}
+	
+	      	$(ed.getParentNode())
+	      		.attr('color', '').css('color', '')
+	      		.children().each(function(){
+	      			$(this).attr('color', '').css('color', '');
+	      		});
 
-		if(hasSelection) {
-			var regex = new RegExp('color(\s*?)[:].*?(?=[;"])|color=".*?"', "gi"),
-			selection = hasSelection.replace(regex, '');
-			ed.execCommand('inserthtml', selection);
-		}
-
-		$(ed.getParentNode())
-			.attr('color', '').css('color', '')
-			.children().each(function(){
-				$(this).attr('color', '').css('color', '');
-			});
-
-      		ed.syncCode();
-      	}, 
+        	ed.syncCode();
+        }, 
       	loadOverlay: function()
       	{
       		$('.'+this.key+'_dropdown').hide();
-		RedactorPlugins.xenforo.loadOverlay('Colors', 'colors', 500, this.ed, RedactorPlugins.xen_colors, 'callback');
-      	},    	
+	    	RedactorPlugins.xenforo.loadOverlay('Colors', 'colors', 500, this.ed, RedactorPlugins.xen_colors, 'callback');
+      	},		
 	callback: function(redactor)
 	{
 		Redactor_Colors.onload($('#redactor_modal'));
-	}      	
+	}	  	
+},
+
+RedactorPlugins.xen_fonts = {
+	init: function()
+	{
+		/***
+		*	This init function is a real plugin
+		*	Important: The plugin part is executed after the dropdown
+		*
+		***/
+
+		var _self = this;
+		
+		var callback_fontSize = 
+			$.proxy(function(e) { 
+					$('.redactor_dropdown:visible')
+						.addClass('dp_fontsize')
+						.children().click(function () {
+						_self.setBuffer();//Bloody undo/redo
+					});
+				},
+			this);
+			
+		var callback_fontName = 
+			$.proxy(function(e) { 
+					$('.redactor_dropdown:visible')
+						.addClass('dp_fontname')
+						.children().click(function () {
+						_self.setBuffer();
+					});
+				},
+			this);
+
+		var fontSize = this.getBtn('xen_fontSize'), fontNames = this.getBtn('xen_fontNames');		
+			
+		fontSize.text(this.opts.params.xenforo.fontsize)
+			.addClass('textbutton')
+			.one('click', callback_fontSize);
+
+		fontNames.text(this.opts.params.xenforo.fontfamily)
+			.addClass('textbutton')
+			.one('click', callback_fontName);			
+	},
+	dropdown: function(key)
+	{
+		if(key === 'xen_fontSize') {
+			return this.fontSizeDp();
+		}
+		
+		if(key === 'xen_fontNames') {
+			return this.getFontNamesDp();
+		}
+	},
+	fonts : {
+		'Andale Mono':'andale mono,times',
+		'Arial':'arial,helvetica,sans-serif',
+		'Arial Black':'arial black,avant garde',
+		'Book Antiqua':'book antiqua,palatino',
+		'Courier New':'courier new,courier',
+		'Georgia':'georgia,palatino',
+		'Helvetica':'helvetica',
+		'Impact':'impact,chicago',
+		'Tahoma':'tahoma,arial,helvetica,sans-serif',
+		'Times New Roman':'times new roman,times',
+		'Trebuchet MS':'trebuchet ms,geneva',
+		'Verdana':'verdana,geneva'
+	},
+	getFontNamesDp: function()
+	{
+		var t = this, builder = {};
+
+		$.each(this.fonts, function(k, v) {
+			var _class = k.toLowerCase().replace(/[ -]/g, '');
+			
+			builder[k] = {
+				title: k,
+				exec: 'fontName',
+				className: 'redactor_font_'+_class,
+				fontFamily: v
+			};
+		});
+
+		return builder;
+	},
+	fontSizeDp: function()
+	{
+		var builder = {};
+		
+		for (i=1; i<8; i++) {
+			builder[i] = {
+				title: i,
+				exec: 'fontSize',
+				className: 'redactor_size_'+i
+			};
+		}
+		
+		return builder;
+	},
+	commandFontSize: function(ed)
+	{
+		ed.$editor.find('font').replaceWith(function() {
+			var attr = parseInt($(this).attr('size')), size;
+
+			if(attr)
+			{
+				switch (attr) {
+				  		case 1: size = 'xx-small'; break;
+				  		case 2: size = 'x-small'; break;
+				  		case 3: size = 'small'; break;
+				  		case 4: size = 'medium'; break;
+				  		case 5: size = 'large'; break;
+				  		case 6: size = 'x-large'; break;
+				  		case 7: size = 'xx-large'; break;
+				  		default: size = 'medium';				  	 				  	 				  	 				  	 				  	 
+ 				}
+
+				return $('<span style="font-size: ' + size + ';">' + $(this).html() + '</span>');
+			}
+		});
+
+		ed.$editor.focus();
+		
+		ed.syncCode();
+	},
+	commandFontName: function(ed)
+	{
+		var t = this;
+		ed.$editor.find('font').replaceWith(function() {
+			var attr = ($(this).attr('face'));
+
+			if(attr.length > 0)
+			{
+				var family = t.fonts[attr];
+				return $('<span style="font-family: ' + family + ';">' + $(this).html() + '</span>');
+			}
+		});
+
+		ed.$editor.focus();
+		
+		ed.syncCode();	
+	}
 }
-
-
