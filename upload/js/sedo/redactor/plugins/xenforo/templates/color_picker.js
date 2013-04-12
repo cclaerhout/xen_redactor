@@ -66,12 +66,12 @@
 		namedLookup: {},
 		getKey: function()
 		{
-			return RedactorPlugins.xen_colors.key;
+			return xenRedactor.colorKey;
 		},
 		getMode: function()
 		{
-			var ed = XenForo.myRedactor.redactor,
-			key = RedactorPlugins.xen_colors.key;
+			var ed = xenRedactor.backup.redactor,
+			key = xenRedactor.colorKey;
 
 	      		if (key === 'xen_backcolors') {
 	      			if (ed.browser('msie')) {
@@ -90,7 +90,7 @@
 			var t = this;
 			
 			/*Params*/
-			var params =  XenForo.myRedactor.redactor.opts.params.xenforo;
+			var params =  xenRedactor.backup.redactor.opts.params.xenforo;
 			t.startColor = (typeof(params.startColor) !== 'undefined') ? params.startColor : t.startColor;
 	
 			/*Mouse manager*/
@@ -141,7 +141,7 @@
 			});
 
 			/*Cleaner*/
-			var ed = XenForo.myRedactor.redactor,
+			var ed = xenRedactor.backup.redactor,
 			key = t.getKey();
 			ed.$editor.find('.'+key+'_tmp').removeClass(key+'_tmp');
 
@@ -174,7 +174,7 @@
 			}
 		},
 		ontrigger: function($modal) {
-			var ed = XenForo.myRedactor.redactor,
+			var ed = xenRedactor.backup.redactor,
 			key = this.getKey();
 			
 			ed.setBuffer();
@@ -186,7 +186,7 @@
 			ed.modalClose();
 		},
 		insertAction: function() {
-			var ed = XenForo.myRedactor.redactor,
+			var ed = xenRedactor.backup.redactor,
 			color = $('#redactor_color').val(),
 			key = Redactor_Colors.getKey(),
 			mode = Redactor_Colors.getMode();
@@ -207,26 +207,20 @@
 			}
 			else{
 	      			if(hasSelection){
-		      			ed.execCommand(mode, color);
+	      				ed.execCommand(mode, color);
 
 	      				if(mode === 'forecolor'){
-			      			ed.$editor.find('font').replaceWith(function() {
-			      				$target = $('<span class="'+key+'_tmp" style="color: ' + $(this).attr('color') + ';">' + $(this).html() + '</span>');
-			      				return $target;
-			      			});
 
-	      		      			ed.setSelection($target[0], 0, $target[0], 0);
-	      		      			ed.saveSelection();
+						ed.execToSpan('font', 'attr', 'color', 'color', false, key+'_tmp');
 					}
-					else if(ed.browser('msie') && mode === 'BackColor'){
+					
+					if(ed.browser('msie') && mode === 'BackColor'){
 
-						ed.$editor.find('font').replaceWith(function() {
-							$target = $('<span class="'+key+'_tmp" style="' + $(this).attr('style') + '">' + $(this).html() + '</span>');
-			      				return $target;
-						});			
-
-	      		      			ed.setSelection($target[0], 0, $target[0], 0);
-	      		      			ed.saveSelection();
+						ed.execToSpan('font', 'attr', 'style', 'background-color', false, key+'_tmp');
+					}
+					else if ( mode === 'BackColor' ||  mode === 'hilitecolor'){
+						//Background-color for other broswers
+						ed.execToSpan('span', 'css', 'background-color', 'background-color', false, key+'_tmp');
 					}
 		      		}else {
 	      				if(key === 'xen_colors'){

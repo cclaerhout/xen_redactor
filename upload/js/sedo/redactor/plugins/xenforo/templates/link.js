@@ -11,7 +11,7 @@
 		},
 		ontrigger: function($modal)
 		{
-			this.ed = XenForo.myRedactor.redactor;
+			this.ed = xenRedactor.backup.redactor;
 			var tab_selected = $('#redactor_tab_selected').val();
 			var link = '', text = '', targettext = '', target = '';
 
@@ -38,6 +38,9 @@
 			}
 
 			text = (text) ? text : link;
+			
+			text = this.ed.escapeHtml(text);
+			link = this.ed.escapeHtml(link);
 
 			this.insert('<a href="' + link + '">' +  text + '</a>', $.trim(text), link);
 		},

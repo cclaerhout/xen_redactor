@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="sedo_redactor" title="Redactor" version_string="0.06" version_id="4" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="sedo_redactor" title="Redactor" version_string="0.07" version_id="5" url="" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -95,7 +95,7 @@
   <route_prefixes/>
   <style_properties/>
   <templates>
-    <template title="redactor.css" version_id="3" version_string="0.05"><![CDATA[.redactor_box {
+    <template title="redactor.css" version_id="4" version_string="0.06"><![CDATA[.redactor_box {
 	position: relative;
 	border: 1px solid #ddd;
 	overflow: visible;
@@ -371,6 +371,13 @@ body .redactor_air .redactor_toolbar {
 .redactor_toolbar .redactor_line {
 	height:34px;
 	border-bottom:1px dashed #DBDBDB;
+	<xen:comment>Needed for the full editor</xen:comment>
+	margin:0;
+	padding:0;
+}
+
+.redactor_toolbar .redactor_line > ul {
+	margin:1px;
 }
 
 .redactor_toolbar .redactor_line li {
@@ -1028,9 +1035,14 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 		<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	</div>
 </form>]]></template>
-    <template title="redactor_js_lang" version_id="3" version_string="0.05"><![CDATA[var RELANG = {};
+    <template title="redactor_js_lang" version_id="4" version_string="0.06"><![CDATA[var RELANG = {};
 
-var RLANG = {
+<xen:comment>
+	You can't extend the phrases here since the RLANG object will process the 
+	translation according to the object keys.
+</xen:comment>
+
+RELANG['xen'] = {
 	html: "{xen:jsescape {xen:phrase sedo_redactor_html}}",
 	video: "{xen:jsescape {xen:phrase sedo_redactor_insert_video}}",
 	image: "{xen:jsescape {xen:phrase sedo_redactor_insert_image}}",
@@ -1096,7 +1108,8 @@ var RLANG = {
 	link_new_tab: "{xen:jsescape {xen:phrase sedo_redactor_open_link_in_newtab}}",
 	underline: "{xen:jsescape {xen:phrase sedo_redactor_underline}}",
 	alignment: "{xen:jsescape {xen:phrase sedo_redactor_alignment}}"
-};]]></template>
+};
+]]></template>
     <template title="redactor_js_params" version_id="3" version_string="0.05"><![CDATA[xenforo: {
 	document_base_url: "{xen:jsescape $requestPaths.fullBasePath}",	
 	smilies: {xen:helper json, $smilies},
@@ -1105,7 +1118,7 @@ var RLANG = {
 	fontsize: "{xen:jsescape {xen:phrase font_size}}",
 	fontfamily: "{xen:jsescape {xen:phrase font_family}}"
 }]]></template>
-    <template title="redactor_js_setup" version_id="3" version_string="0.05"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
+    <template title="redactor_js_setup" version_id="4" version_string="0.06"><![CDATA[<xen:require js="js/sedo/redactor/redactor.js" />
 <xen:require js="js/sedo/redactor/plugins/xenforo/xenforo.js" />
 <xen:require css="redactor.css" />
 <xen:require css="redactor_xenforo.css" />
@@ -1130,7 +1143,7 @@ var RLANG = {
 	
 	<xen:hook name="redactor_js_buttons" params="{xen:array 'editorId={$editorId}'}">
 		<xen:set var="$buttons">
-			'formatting', 'xen_removeformat', '|', 'xen_fontSize', 'xen_fontNames', 'alignment', '|', 'xen_colors', 'xen_backcolors', '|', 'xen_undo', 'xen_redo', '#', 
+			'xen_removeformat', '|', 'xen_fontSize', 'xen_fontNames', 'formatting', 'alignment', '|', 'xen_colors', 'xen_backcolors', '|', 'xen_undo', 'xen_redo', '#', 
 			 'bold', 'italic', 'underline', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|','image', 'xen_media', '|', 'xen_link', 'xen_code', '#',
 			 'file', 'table', '|', 'horizontalrule'
 		</xen:set>
@@ -1141,17 +1154,16 @@ var RLANG = {
 		$editor.css('visibility', '').show();
 
 		<xen:hook name="redactor_js_custom_functions">
-			function xenforo_init(o,e,k){
-				RedactorPlugins.xenforo.init(o,e,k);
+			function xenforo_cmd(o,e,k){
+				xenRedactor.cmd(o,e,k);
 			}
 
 			function xenforo_dropdowns(k){
-				return RedactorPlugins.xenforo.dropdowns(k);
+				return xenRedactor.dropdowns(k);
 			}
 
-
 			function commandCallbacks(o,c){
-				RedactorPlugins.xenforo.commandCallbacks(o,c);
+				xenRedactor.commandCallbacks(o,c);
 			}
 
       			<xen:if is="{$customButtons}">
@@ -1170,26 +1182,27 @@ var RLANG = {
 
 		</xen:hook>
 
-      		$editor.redactor(
-      		{
+      		var config =
+		{
       			focus: true,
       			iframe: false,
+			lang: 'xen',
 			direction: '{$visitorLanguage.text_direction}',
 			minHeight: 105,
-      			plugins: [{$plugins}],
+      			plugins: ['xenLoader', {$plugins}],
       			buttons: [{$buttons}],
 			params: {<xen:include template="redactor_js_params" />},
 			buttonsCustom:
       			{
 				<xen:hook name="redactor_js_custom_buttons">
-					xen_removeformat: { title: "{xen:jsescape {xen:phrase sedo_redactor_remove_formatting}}", callback: xenforo_init },
-					xen_undo: { title: "{xen:jsescape {xen:phrase sedo_redactor_undo}}", callback: xenforo_init },
-					xen_redo: { title: "{xen:jsescape {xen:phrase sedo_redactor_redo}}", callback: xenforo_init },
-					xen_media: { title: "{xen:jsescape {xen:phrase media}}", callback: xenforo_init },
-					xen_code: { title: "{xen:jsescape {xen:phrase insert_code}}", callback: xenforo_init },
-					xen_link: { title: "{xen:jsescape {xen:phrase sedo_redactor_link_or_mail}}", callback: xenforo_init },
-					xen_colors: { title: "{xen:jsescape {xen:phrase sedo_redactor_font_color}}", callback: xenforo_init },
-					xen_backcolors: { title: "{xen:jsescape {xen:phrase sedo_redactor_back_color}}", callback: xenforo_init },
+					xen_removeformat: { title: "{xen:jsescape {xen:phrase sedo_redactor_remove_formatting}}", callback: xenforo_cmd },
+					xen_undo: { title: "{xen:jsescape {xen:phrase sedo_redactor_undo}}", callback: xenforo_cmd },
+					xen_redo: { title: "{xen:jsescape {xen:phrase sedo_redactor_redo}}", callback: xenforo_cmd },
+					xen_media: { title: "{xen:jsescape {xen:phrase media}}", callback: xenforo_cmd },
+					xen_code: { title: "{xen:jsescape {xen:phrase insert_code}}", callback: xenforo_cmd },
+					xen_link: { title: "{xen:jsescape {xen:phrase sedo_redactor_link_or_mail}}", callback: xenforo_cmd, dropdown: xenforo_dropdowns('xen_link') },
+					xen_colors: { title: "{xen:jsescape {xen:phrase sedo_redactor_font_color}}", callback: xenforo_cmd },
+					xen_backcolors: { title: "{xen:jsescape {xen:phrase sedo_redactor_back_color}}", callback: xenforo_cmd },
 					xen_fontSize: { title: "{xen:jsescape {xen:phrase font_size}}", dropdown: xenforo_dropdowns('xen_fontSize') },
 					xen_fontNames: { title: "{xen:jsescape {xen:phrase font_family}}", dropdown: xenforo_dropdowns('xen_fontNames') },
 
@@ -1203,8 +1216,10 @@ var RLANG = {
 				</xen:hook>
       			},
 			execCommandCallback: function(obj, command) { commandCallbacks(obj, command) } 
-      		});
+      		};
 
+		$.extend(true, config, xenRedactor.config);
+      		$editor.redactor(config);
 		$editor.data('editorActivated', true);
 	});
 }

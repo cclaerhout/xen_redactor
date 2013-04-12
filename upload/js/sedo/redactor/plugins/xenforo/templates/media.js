@@ -28,7 +28,7 @@
 	
 			if (ajaxData.matchBbCode)
 			{
-				var ed = XenForo.myRedactor.redactor,
+				var ed = xenRedactor.backup.redactor,
 				//Check if content empty: if yes wrap html with tags to avoid caret problems
 				html = ($('<p>'+ed.getCode()+'</p>').text()) ? ajaxData.matchBbCode : '<p>'+ajaxData.matchBbCode+'</p>'; 
 

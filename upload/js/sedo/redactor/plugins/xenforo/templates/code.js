@@ -11,7 +11,8 @@
 		},
 		ontrigger: function($modal)
 		{
-			var code = $modal.find('#ctrl_code').val(),
+			var ed = xenRedactor.backup.redactor,
+			code = $modal.find('#ctrl_code').val(),
 			type = $modal.find('#ctrl_type').val();
 
 			switch (type)
@@ -26,7 +27,7 @@
 					tag = 'CODE';
 			}
 			
-			code = RedactorPlugins.xenforo.escapeHtml(code, 'space');
+			code = ed.escapeHtml(code);
 			
 			output = '[' + tag + ']' + code + '[/' + tag + ']';
 			if (output.match(/\n/))
@@ -34,11 +35,10 @@
 				output = '<p>' + output + '</p>';
 			}
 
-			this.insert(output);
+			this.insert(ed, output);
 		},
-		insert: function(output)
+		insert: function(ed, output)
 		{
-      			var ed = XenForo.myRedactor.redactor,
       			//Check if content empty: if yes wrap html with tags to avoid caret problems
       			html = ($('<p>'+ed.getCode()+'</p>').text()) ? output : '<p>'+output+'</p>'; 
 
